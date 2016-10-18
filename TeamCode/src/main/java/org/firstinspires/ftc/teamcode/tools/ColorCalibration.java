@@ -56,14 +56,14 @@ public class ColorCalibration extends LinearOpMode
         boolean a = false;
         while (!a)
         {
-            tryIdle();
+            idle();
             a = gamepad1.a;
         }
 
         boolean b = false;
         while (!b)
         {
-            tryIdle();
+            idle();
             b = gamepad1.b;
         }
 
@@ -92,17 +92,6 @@ public class ColorCalibration extends LinearOpMode
         try
         {
             wait(ms);
-        }
-        catch (InterruptedException e)
-        {
-        }
-    }
-
-    public void tryIdle()
-    {
-        try
-        {
-            idle();
         }
         catch (InterruptedException e)
         {

@@ -89,18 +89,19 @@ public class  TeleOpMecanum extends OpMode {
 	@Override
 	public void init()
 	{
+        driveSystem = new MecanumDriveSystem();
         this.driveSystem.init(this.hardwareMap);
 
         this.armDcMotorServo = new DcMotorServo();
-        this.armDcMotorServo.init(this.hardwareMap, "armMotor", "armServo");
+        //this.armDcMotorServo.init(this.hardwareMap, "armMotor", "armServo");
         this.armDcMotorServo.forwardPower = 0.5;
         this.armDcMotorServo.reversePower = 0.1;
 
-		winchMotor = hardwareMap.dcMotor.get("winchMotor");
+		//winchMotor = hardwareMap.dcMotor.get("winchMotor");
 
-		servoLeftWing = hardwareMap.servo.get("servoLeftWing");
-		servoRightWing = hardwareMap.servo.get("servoRightWing");
-		servoClimberRelease = hardwareMap.servo.get("servoClimberRelease");
+		//servoLeftWing = hardwareMap.servo.get("servoLeftWing");
+		//servoRightWing = hardwareMap.servo.get("servoRightWing");
+		//servoClimberRelease = hardwareMap.servo.get("servoClimberRelease");
 
         this.climberReleaseButton = new Button();
         this.climberReleaseButton.isPressed =
@@ -118,7 +119,7 @@ public class  TeleOpMecanum extends OpMode {
                 @Override
                 public void invoke()
                 {
-                    servoClimberRelease.setPosition(0.95);
+                    //servoClimberRelease.setPosition(0.95);
                 }
             };
         this.climberReleaseButton.pressedHandler =
@@ -127,7 +128,7 @@ public class  TeleOpMecanum extends OpMode {
                 @Override
                 public void invoke()
                 {
-                    servoClimberRelease.setPosition(0);
+                    //servoClimberRelease.setPosition(0);
                 }
             };
 
@@ -147,7 +148,7 @@ public class  TeleOpMecanum extends OpMode {
                 @Override
                 public void invoke()
                 {
-                    servoLeftWing.setPosition(0.20);
+                    //servoLeftWing.setPosition(0.20);
                 }
             };
         this.leftWingButton.pressedHandler =
@@ -156,7 +157,7 @@ public class  TeleOpMecanum extends OpMode {
                 @Override
                 public void invoke()
                 {
-                    servoLeftWing.setPosition(0.93);
+                    //servoLeftWing.setPosition(0.93);
                 }
             };
 
@@ -176,7 +177,7 @@ public class  TeleOpMecanum extends OpMode {
                 @Override
                 public void invoke()
                 {
-                    servoRightWing.setPosition(0.85);
+                    //servoRightWing.setPosition(0.85);
                 }
             };
         this.rightWingButton.releasedHandler =
@@ -185,7 +186,7 @@ public class  TeleOpMecanum extends OpMode {
                 @Override
                 public void invoke()
                 {
-                    servoRightWing.setPosition(0.10);
+                    //servoRightWing.setPosition(0.10);
                 }
             };
 	}
@@ -198,7 +199,7 @@ public class  TeleOpMecanum extends OpMode {
 	@Override
 	public void loop()
 	{
-		double currentPos = armPotentiometer.getVoltage();
+		double currentPos = 0;//armPotentiometer.getVoltage();
 
 		// scale the joystick value to make it easier to control
 		// the robot more precisely at slower speeds.
@@ -251,8 +252,8 @@ public class  TeleOpMecanum extends OpMode {
 		//telemetry.addData("Text", rightX + ", " + rightY + ", " + leftX + ", " + leftY);
 		telemetry.addData("pot", this.armDcMotorServo.getCurrentPosition());
 		telemetry.addData("targetPosition",this.armDcMotorServo.targetPosition);
-		telemetry.addData("rightWingPos",servoRightWing.getPosition());
-		telemetry.addData("leftWingPos",servoLeftWing.getPosition());
+		//telemetry.addData("rightWingPos",servoRightWing.getPosition());
+		//telemetry.addData("leftWingPos",servoLeftWing.getPosition());
 	}
 
 	/*

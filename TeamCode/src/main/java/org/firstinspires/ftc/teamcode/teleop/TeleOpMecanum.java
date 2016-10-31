@@ -89,6 +89,7 @@ public class  TeleOpMecanum extends OpMode {
 	@Override
 	public void init()
 	{
+        this.driveSystem = new MecanumDriveSystem();
         this.driveSystem.init(this.hardwareMap);
 
         this.armDcMotorServo = new DcMotorServo();

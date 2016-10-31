@@ -63,10 +63,10 @@ public class TeleOpTank extends OpMode {
 	 */
 	@Override
 	public void init() {
-		motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
-		motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
-		motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
-		motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
+		motorFrontRight = hardwareMap.dcMotor.get("motor_front_right");
+		motorBackRight = hardwareMap.dcMotor.get("motor_back_right");
+		motorFrontLeft = hardwareMap.dcMotor.get("motor_front_left");
+		motorBackLeft = hardwareMap.dcMotor.get("motor_back_left");
 
 		motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
 		motorBackLeft.setDirection(DcMotor.Direction.REVERSE);

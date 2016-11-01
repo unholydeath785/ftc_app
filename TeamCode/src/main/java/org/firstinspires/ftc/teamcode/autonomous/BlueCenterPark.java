@@ -60,7 +60,6 @@ public class BlueCenterPark extends AutonomousOpMode {
     }
 
     public void park() {
-        System.out.print("booty sex ( ͡° ͜ʖ ͡°) Das A Pretty Güüd");
     }
    /*
         drive:

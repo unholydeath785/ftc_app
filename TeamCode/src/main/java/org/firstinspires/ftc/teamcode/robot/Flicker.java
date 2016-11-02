@@ -1,15 +1,5 @@
 package org.firstinspires.ftc.teamcode.robot;
 
-<<<<<<< HEAD
-/**
- * Created by EvanCoulson on 10/23/16.
- */
-public class Flicker {
-=======
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-
 /**
  * Created by EvanCoulson on 10/25/16.
  */
@@ -29,5 +19,4 @@ public class Flicker {
             flicker.setPower(0.8);
         }
     }
->>>>>>> 6256564b7bd27a26b8b20f1050555b4e7481069e
 }

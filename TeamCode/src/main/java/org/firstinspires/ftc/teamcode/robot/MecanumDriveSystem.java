@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
@@ -33,8 +34,10 @@ public class MecanumDriveSystem
         this.motorFrontRight  = this.hwMap.dcMotor.get("motor_front_right");
         this.motorBackLeft   = this.hwMap.dcMotor.get("motor_back_left");
         this.motorBackRight  = this.hwMap.dcMotor.get("motor_back_right");
-
-        this.motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
+        /////////NOTE: This is a workaround because the motor moves the wrong way for
+        //                an unknown reason
+        this.motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
+        /////////////////////////////////////////////////////////////////////
         this.motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
         this.motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
         this.motorBackRight.setDirection(DcMotor.Direction.REVERSE);
@@ -136,7 +139,7 @@ public class MecanumDriveSystem
     {
         rightX = Range.clip(rightX, -1, 1);
         rightY = Range.clip(rightY, -1, 1);
-        leftX = Range.clip(rightX, -1, 1);
+        leftX = Range.clip(leftX, -1, 1);
         leftY = Range.clip(leftY, -1, 1);
 
         rightX = scaleJoystickValue(rightX);
@@ -145,6 +148,10 @@ public class MecanumDriveSystem
         leftY =  scaleJoystickValue(leftY);
 
         // write the values to the motors
+        double frontRightPower = leftY + rightX + leftX;
+        double backRightPower = leftY + rightX - leftX;
+        double frontLeftPower = leftY - rightX - leftX;
+        double backLeftPower = leftY - rightX + leftX;
         motorFrontRight.setPower(Range.clip(leftY + rightX + leftX, -1, 1));
         motorBackRight.setPower(Range.clip(leftY + rightX - leftX, -1, 1));
         motorFrontLeft.setPower(Range.clip(leftY - rightX - leftX, -1, 1));

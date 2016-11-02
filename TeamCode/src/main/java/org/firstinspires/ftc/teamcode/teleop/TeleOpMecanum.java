@@ -44,7 +44,7 @@ import org.firstinspires.ftc.teamcode.util.Handler;
  */
 
 @TeleOp(name="TeleOpMecanum", group="TeleOp")
-public class  TeleOpMecanum extends OpMode {
+public class TeleOpMecanum extends OpMode {
 
     //region Motors
     MecanumDriveSystem driveSystem;
@@ -80,17 +80,7 @@ public class  TeleOpMecanum extends OpMode {
 	 * 
 	 * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#init()
 	 */
-	@Override
-	public void init()
-	{
-    double climbPos = 2.0; //TODO: Figure out the correct value
-    double extendPos = 1.1; //TODO: Figure out the correct value
-    double maxPos = 4.0; //TODO: Figure out the correct value
-    double minPos = 1.0; //TODO: Figure out the correct value
 
-    public TeleOpMecanum() {
-
-    }
 
     /*
      * Code to run when the op mode is initialized goes here
@@ -133,9 +123,6 @@ public class  TeleOpMecanum extends OpMode {
                 new Handler()
                 {
                     //servoClimberRelease.setPosition(0.95);
-                }
-            };
-                    @Override
                     public void invoke()
                     {
                         //servoClimberRelease.setPosition(0.95);
@@ -145,8 +132,6 @@ public class  TeleOpMecanum extends OpMode {
                 new Handler()
                 {
                     //servoClimberRelease.setPosition(0);
-                }
-            };
                     @Override
                     public void invoke()
                     {
@@ -156,20 +141,17 @@ public class  TeleOpMecanum extends OpMode {
 
         this.leftWingButton = new Button();
         this.leftWingButton.isPressed =
-                new Func<Boolean>()
-                {
-                    @Override
-                    public Boolean value()
-                    {
-                        return gamepad2.left_bumper;
-                    }
-                };
+        new Func<Boolean>()
+        {
+            @Override
+            public Boolean value()
+            {
+                return gamepad2.left_bumper;
+            }
+        };
         this.leftWingButton.pressedHandler =
-                new Handler()
-                {
+                new Handler() {
                     //servoLeftWing.setPosition(0.20);
-                }
-            };
                     @Override
                     public void invoke()
                     {
@@ -177,14 +159,10 @@ public class  TeleOpMecanum extends OpMode {
                     }
                 };
         this.leftWingButton.pressedHandler =
-                new Handler()
-                {
+                new Handler() {
                     //servoLeftWing.setPosition(0.93);
-                }
-            };
                     @Override
-                    public void invoke()
-                    {
+                    public void invoke() {
                         //servoLeftWing.setPosition(0.93);
                     }
                 };
@@ -203,8 +181,6 @@ public class  TeleOpMecanum extends OpMode {
                 new Handler()
                 {
                     //servoRightWing.setPosition(0.85);
-                }
-            };
                     @Override
                     public void invoke()
                     {
@@ -215,8 +191,12 @@ public class  TeleOpMecanum extends OpMode {
                 new Handler()
                 {
                     //servoRightWing.setPosition(0.10);
-                }
-            };
+                    @Override
+                    public void invoke()
+                    {
+                        //servoRightWing.setPosition(0.85);
+                    }
+                };
 	}
 
 	/*
@@ -224,27 +204,6 @@ public class  TeleOpMecanum extends OpMode {
 	 * 
 	 * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#run()
 	 */
-	@Override
-	public void loop()
-	{
-		double currentPos = 0;//armPotentiometer.getVoltage();
-
-		// scale the joystick value to make it easier to control
-		// the robot more precisely at slower speeds.
-=======
-                    @Override
-                    public void invoke()
-                    {
-                        //servoRightWing.setPosition(0.10);
-                    }
-                };
-    }
-
-    /*
-     * This method will be called repeatedly in a loop
-     *
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#run()
-     */
     @Override
     public void loop()
     {
@@ -313,24 +272,11 @@ public class  TeleOpMecanum extends OpMode {
 	@Override
 	public void stop()
 	{
-
-	}
-}
         //telemetry.addData("Text", rightX + ", " + rightY + ", " + leftX + ", " + leftY);
         telemetry.addData("pot", this.armDcMotorServo.getCurrentPosition());
         telemetry.addData("targetPosition",this.armDcMotorServo.targetPosition);
         //telemetry.addData("rightWingPos",servoRightWing.getPosition());
         //telemetry.addData("leftWingPos",servoLeftWing.getPosition());
     }
-
-    /*
-     * Code to run when the op mode is first disabled goes here
-     *
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#stop()
-     */
-    @Override
-    public void stop()
-    {
-
-    }
+    
 }

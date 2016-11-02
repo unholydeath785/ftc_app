@@ -66,7 +66,6 @@ public class  TeleOpMecanum extends OpMode {
     private Button rightWingButton;
 
     private DcMotorServo armDcMotorServo;
-<<<<<<< HEAD
 	double climbPos = 2.0; //TODO: Figure out the correct value
 	double extendPos = 1.1; //TODO: Figure out the correct value
 	double maxPos = 4.0; //TODO: Figure out the correct value
@@ -84,7 +83,6 @@ public class  TeleOpMecanum extends OpMode {
 	@Override
 	public void init()
 	{
-=======
     double climbPos = 2.0; //TODO: Figure out the correct value
     double extendPos = 1.1; //TODO: Figure out the correct value
     double maxPos = 4.0; //TODO: Figure out the correct value
@@ -102,7 +100,6 @@ public class  TeleOpMecanum extends OpMode {
     @Override
     public void init()
     {
->>>>>>> 6256564b7bd27a26b8b20f1050555b4e7481069e
         driveSystem = new MecanumDriveSystem();
         this.driveSystem.init(this.hardwareMap);
 
@@ -111,19 +108,16 @@ public class  TeleOpMecanum extends OpMode {
         this.armDcMotorServo.forwardPower = 0.5;
         this.armDcMotorServo.reversePower = 0.1;
 
-<<<<<<< HEAD
 		//winchMotor = hardwareMap.dcMotor.get("winchMotor");
 
 		//servoLeftWing = hardwareMap.servo.get("servoLeftWing");
 		//servoRightWing = hardwareMap.servo.get("servoRightWing");
 		//servoClimberRelease = hardwareMap.servo.get("servoClimberRelease");
-=======
         //winchMotor = hardwareMap.dcMotor.get("winchMotor");
 
         //servoLeftWing = hardwareMap.servo.get("servoLeftWing");
         //servoRightWing = hardwareMap.servo.get("servoRightWing");
         //servoClimberRelease = hardwareMap.servo.get("servoClimberRelease");
->>>>>>> 6256564b7bd27a26b8b20f1050555b4e7481069e
 
         this.climberReleaseButton = new Button();
         this.climberReleaseButton.isPressed =
@@ -138,33 +132,27 @@ public class  TeleOpMecanum extends OpMode {
         this.climberReleaseButton.pressedHandler =
                 new Handler()
                 {
-<<<<<<< HEAD
                     //servoClimberRelease.setPosition(0.95);
                 }
             };
-=======
                     @Override
                     public void invoke()
                     {
                         //servoClimberRelease.setPosition(0.95);
                     }
                 };
->>>>>>> 6256564b7bd27a26b8b20f1050555b4e7481069e
         this.climberReleaseButton.pressedHandler =
                 new Handler()
                 {
-<<<<<<< HEAD
                     //servoClimberRelease.setPosition(0);
                 }
             };
-=======
                     @Override
                     public void invoke()
                     {
                         //servoClimberRelease.setPosition(0);
                     }
                 };
->>>>>>> 6256564b7bd27a26b8b20f1050555b4e7481069e
 
         this.leftWingButton = new Button();
         this.leftWingButton.isPressed =
@@ -179,33 +167,27 @@ public class  TeleOpMecanum extends OpMode {
         this.leftWingButton.pressedHandler =
                 new Handler()
                 {
-<<<<<<< HEAD
                     //servoLeftWing.setPosition(0.20);
                 }
             };
-=======
                     @Override
                     public void invoke()
                     {
                         //servoLeftWing.setPosition(0.20);
                     }
                 };
->>>>>>> 6256564b7bd27a26b8b20f1050555b4e7481069e
         this.leftWingButton.pressedHandler =
                 new Handler()
                 {
-<<<<<<< HEAD
                     //servoLeftWing.setPosition(0.93);
                 }
             };
-=======
                     @Override
                     public void invoke()
                     {
                         //servoLeftWing.setPosition(0.93);
                     }
                 };
->>>>>>> 6256564b7bd27a26b8b20f1050555b4e7481069e
 
         this.rightWingButton = new Button();
         this.rightWingButton.isPressed =
@@ -220,22 +202,18 @@ public class  TeleOpMecanum extends OpMode {
         this.rightWingButton.pressedHandler =
                 new Handler()
                 {
-<<<<<<< HEAD
                     //servoRightWing.setPosition(0.85);
                 }
             };
-=======
                     @Override
                     public void invoke()
                     {
                         //servoRightWing.setPosition(0.85);
                     }
                 };
->>>>>>> 6256564b7bd27a26b8b20f1050555b4e7481069e
         this.rightWingButton.releasedHandler =
                 new Handler()
                 {
-<<<<<<< HEAD
                     //servoRightWing.setPosition(0.10);
                 }
             };
@@ -274,7 +252,6 @@ public class  TeleOpMecanum extends OpMode {
 
         // scale the joystick value to make it easier to control
         // the robot more precisely at slower speeds.
->>>>>>> 6256564b7bd27a26b8b20f1050555b4e7481069e
         this.driveSystem.mecanumDrive(gamepad1.right_stick_x, gamepad1.right_stick_y, gamepad1.left_stick_x, gamepad1.left_stick_y);
 
         climberReleaseButton.testAndHandle();
@@ -321,7 +298,6 @@ public class  TeleOpMecanum extends OpMode {
 
         this.armDcMotorServo.loop();
 
-<<<<<<< HEAD
 		//telemetry.addData("Text", rightX + ", " + rightY + ", " + leftX + ", " + leftY);
 		telemetry.addData("pot", this.armDcMotorServo.getCurrentPosition());
 		telemetry.addData("targetPosition",this.armDcMotorServo.targetPosition);
@@ -340,7 +316,6 @@ public class  TeleOpMecanum extends OpMode {
 
 	}
 }
-=======
         //telemetry.addData("Text", rightX + ", " + rightY + ", " + leftX + ", " + leftY);
         telemetry.addData("pot", this.armDcMotorServo.getCurrentPosition());
         telemetry.addData("targetPosition",this.armDcMotorServo.targetPosition);
@@ -359,4 +334,3 @@ public class  TeleOpMecanum extends OpMode {
 
     }
 }
->>>>>>> 6256564b7bd27a26b8b20f1050555b4e7481069e

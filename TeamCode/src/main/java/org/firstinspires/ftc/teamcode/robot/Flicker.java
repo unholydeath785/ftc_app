@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.robot;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
 /**
  * Created by EvanCoulson on 10/25/16.
  */

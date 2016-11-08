@@ -21,7 +21,7 @@ public class FlickerSystem {
         this.position = ServoPositions.FLICKERLOAD;
     }
 
-    public void shoot() {
+    public void autonomousShoot() {
         if (!flicker.isBusy()) {
             setShootPosition();
             flicker.setTargetPosition(flicker.getCurrentPosition() + 1120);
@@ -30,6 +30,10 @@ public class FlickerSystem {
             flicker.setPower(0.8);
             setLoadPosition();
         }
+    }
+
+    public void teleopShoot() {
+        // spin motor while button pressed
     }
 
     public void setLoadPosition() {
@@ -42,19 +46,6 @@ public class FlickerSystem {
         loadServo.setDirection(Servo.Direction.REVERSE);
         loadServo.setPosition(315);
         this.position = ServoPositions.FLICKERLOAD;
-    }
-
-    // Possibly Unnessecary.
-    public void toggleLoadPosition() {
-        if (position == ServoPositions.FLICKERLOAD) { //Toggle to flicker shoot
-            loadServo.setDirection(Servo.Direction.REVERSE);
-            loadServo.setPosition(315); //(In Degrees, also placeholer)
-            position = ServoPositions.FLICKERSHOOT;
-        } else { //Toggle to flicker load
-            loadServo.setDirection(Servo.Direction.FORWARD);
-            loadServo.setPosition(45); //(In Degrees, also placeholer)
-            position = ServoPositions.FLICKERLOAD;
-        }
     }
 
     private enum ServoPositions {

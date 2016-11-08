@@ -56,7 +56,7 @@ public class BlueCenterPark extends AutonomousOpMode {
     }
 
     public void shoot() {
-        flickerSystem.shoot();
+        flickerSystem.autonomousShoot();
     }
 
     public void park() {

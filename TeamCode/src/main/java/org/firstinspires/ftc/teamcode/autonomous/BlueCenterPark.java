@@ -24,12 +24,12 @@ import org.firstinspires.ftc.teamcode.util.Handler;
  */
 public class BlueCenterPark extends AutonomousOpMode {
     private HardwareMap hardwareMap;
-    private Flicker flicker;
+    private FlickerSystem flickerSystem;
     private MecanumDriveSystem driveSystem;
 
     public void initialzeAllDevices(HardwareMap map) {
         this.hardwareMap = map;
-        this.flicker = new Flicker(map);
+        this.flickerSystem = new FlickerSystem(map);
         this.driveSystem = new MecanumDriveSystem();
         this.driveSystem.init(map);
     }
@@ -56,7 +56,7 @@ public class BlueCenterPark extends AutonomousOpMode {
     }
 
     public void shoot() {
-        flicker.shoot();
+        flickerSystem.shoot();
     }
 
     public void park() {

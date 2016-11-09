@@ -44,7 +44,7 @@ import org.firstinspires.ftc.teamcode.util.Handler;
 
 
 /**
- * TeleOpTank Mode
+ * TeleOpMecanum Mode
  * <p>
  * Enables control of the robot via the gamepad
  */
@@ -55,7 +55,7 @@ public class  TeleOpMecanum extends OpMode {
 	//region Motors
 	MecanumDriveSystem driveSystem;
 
-	DcMotor flickerMotor;
+	//DcMotor flickerMotor;
 	//DcMotor winchMotor;
 	//endregion
 
@@ -161,14 +161,14 @@ public class  TeleOpMecanum extends OpMode {
                 }
             };
 
-        this.FlickerButton = new Button();
+        this.FlickerButton = new Button(); //TODO: Flicker System implementation whoever is doing that
         this.FlickerButton.isPressed =
             new Func<Boolean>()
                 {
                     @Override
                     public Boolean value()
                     {
-                        return gamepad1.left_bumper;
+                        return gamepad1.right_trigger > 0;
                     }
                 };
         this.FlickerButton.pressedHandler =
@@ -177,7 +177,7 @@ public class  TeleOpMecanum extends OpMode {
                 @Override
                 public void invoke()
                 {
-                    //servoRightWing.setPosition(0.85);
+                    //move flicker
                 }
             };
         this.FlickerButton.releasedHandler =
@@ -186,7 +186,7 @@ public class  TeleOpMecanum extends OpMode {
                 @Override
                 public void invoke()
                 {
-                    //servoRightWing.setPosition(0.10);
+                    //stop flicker
                 }
             };
 	}
@@ -212,7 +212,7 @@ public class  TeleOpMecanum extends OpMode {
 		//region Winch
 		//if(gamepad1.right_trigger > 0 && gamepad2.right_trigger > 0)
 		//{
-			//winchMotor.setPower(1.0);
+            //winchMotor.setPower(1.0);
 		//}
 		//else if(gamepad1.left_trigger > 0 && gamepad2.left_trigger > 0)
 		//{
@@ -224,14 +224,14 @@ public class  TeleOpMecanum extends OpMode {
 		//}
 		//endregion
 
-		//if (gamepad2.dpad_up)
-		//{
-			//this.armDcMotorServo.targetPosition = maxPos;
-		//}
-		//else if (gamepad2.dpad_down)
-		//{
-			//this.armDcMotorServo.targetPosition = minPos;
-		//}
+		if (gamepad2.dpad_up)
+		{
+			// move flicker ramp to shoot position
+		}
+		else if (gamepad2.dpad_down)
+		{
+			//move flicker ramp to load position
+		}
 		//else if (gamepad2.a)
 		//{
 			//this.armDcMotorServo.targetPosition = extendPos;

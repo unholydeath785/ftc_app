@@ -34,13 +34,10 @@ public class MecanumDriveSystem
         this.motorFrontRight  = this.hwMap.dcMotor.get("motor_front_right");
         this.motorBackLeft   = this.hwMap.dcMotor.get("motor_back_left");
         this.motorBackRight  = this.hwMap.dcMotor.get("motor_back_right");
-        /////////NOTE: This is a workaround because the motor moves the wrong way for
-        //                an unknown reason
         this.motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
-        /////////////////////////////////////////////////////////////////////
-        this.motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
-        this.motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
-        this.motorBackRight.setDirection(DcMotor.Direction.REVERSE);
+        this.motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
+        this.motorFrontRight.setDirection(DcMotor.Direction.FORWARD);
+        this.motorBackRight.setDirection(DcMotor.Direction.FORWARD);
 
         // Set all drive motors to zero power
         drive(0);

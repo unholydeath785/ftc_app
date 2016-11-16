@@ -32,10 +32,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.AnalogInput;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Func;
@@ -44,7 +40,7 @@ import org.firstinspires.ftc.teamcode.util.Handler;
 
 
 /**
- * TeleOpTank Mode
+ * TeleOpMecanum Mode
  * <p>
  * Enables control of the robot via the gamepad
  */
@@ -55,7 +51,7 @@ public class TeleOpMecanum extends OpMode {
 	//region Motors
 	MecanumDriveSystem driveSystem;
 
-	DcMotor flickerMotor;
+	//DcMotor flickerMotor;
 	//DcMotor winchMotor;
 	//endregion
 
@@ -69,7 +65,9 @@ public class TeleOpMecanum extends OpMode {
 
     private Button climberReleaseButton;
     private Button leftWingButton;
-    private Button FlickerButton;
+    private Button flickerButton;
+    private Button flickerShootPositionButton;
+    private Button flickerLoadPositionButton;
 
     //private DcMotorServo armDcMotorServo;
 	//double climbPos = 2.0; //TODO: Figure out the correct value
@@ -148,7 +146,7 @@ public class TeleOpMecanum extends OpMode {
                 @Override
                 public void invoke()
                 {
-                    driveSystem.motorBackRight.setPower(1);
+                    driveSystem.motorFrontRight.setPower(1);
                 }
             };
         this.leftWingButton.releasedHandler =
@@ -157,38 +155,96 @@ public class TeleOpMecanum extends OpMode {
                 @Override
                 public void invoke()
                 {
-                    driveSystem.motorBackRight.setPower(0);
+                    driveSystem.motorFrontRight.setPower(0);
                 }
             };
 
-        this.FlickerButton = new Button();
-        this.FlickerButton.isPressed =
+        this.flickerButton = new Button(); //TODO: Flicker System implementation whoever is doing that
+        this.flickerButton.isPressed =
             new Func<Boolean>()
                 {
                     @Override
                     public Boolean value()
                     {
-                        return gamepad1.left_bumper;
+                        return gamepad1.right_trigger > 0;
                     }
                 };
-        this.FlickerButton.pressedHandler =
+        this.flickerButton.pressedHandler =
             new Handler()
             {
                 @Override
                 public void invoke()
                 {
-                    //servoRightWing.setPosition(0.85);
+                    //move flicker
                 }
             };
-        this.FlickerButton.releasedHandler =
+        this.flickerButton.releasedHandler =
             new Handler()
             {
                 @Override
                 public void invoke()
                 {
-                    //servoRightWing.setPosition(0.10);
+                    //stop flicker
                 }
             };
+
+        this.flickerShootPositionButton = new Button(); //TODO: Flicker System implementation whoever is doing that
+        this.flickerShootPositionButton.isPressed =
+                new Func<Boolean>()
+                {
+                    @Override
+                    public Boolean value()
+                    {
+                        return gamepad2.dpad_up;
+                    }
+                };
+        this.flickerShootPositionButton.pressedHandler =
+                new Handler()
+                {
+                    @Override
+                    public void invoke()
+                    {
+                        //move flicker
+                    }
+                };
+        this.flickerShootPositionButton.releasedHandler =
+                new Handler()
+                {
+                    @Override
+                    public void invoke()
+                    {
+                        //stop flicker
+                    }
+                };
+
+        this.flickerLoadPositionButton = new Button(); //TODO: Flicker System implementation whoever is doing that
+        this.flickerLoadPositionButton.isPressed =
+                new Func<Boolean>()
+                {
+                    @Override
+                    public Boolean value()
+                    {
+                        return gamepad2.dpad_down;
+                    }
+                };
+        this.flickerLoadPositionButton.pressedHandler =
+                new Handler()
+                {
+                    @Override
+                    public void invoke()
+                    {
+                        //move flicker
+                    }
+                };
+        this.flickerLoadPositionButton.releasedHandler =
+                new Handler()
+                {
+                    @Override
+                    public void invoke()
+                    {
+                        //stop flicker
+                    }
+                };
 	}
 
 	/*
@@ -207,12 +263,14 @@ public class TeleOpMecanum extends OpMode {
 
         climberReleaseButton.testAndHandle();
         leftWingButton.testAndHandle();
-        FlickerButton.testAndHandle();
+        flickerButton.testAndHandle();
+        flickerShootPositionButton.testAndHandle();
+        flickerLoadPositionButton.testAndHandle();
 
 		//region Winch
 		//if(gamepad1.right_trigger > 0 && gamepad2.right_trigger > 0)
 		//{
-			//winchMotor.setPower(1.0);
+            //winchMotor.setPower(1.0);
 		//}
 		//else if(gamepad1.left_trigger > 0 && gamepad2.left_trigger > 0)
 		//{
@@ -226,11 +284,11 @@ public class TeleOpMecanum extends OpMode {
 
 		//if (gamepad2.dpad_up)
 		//{
-			//this.armDcMotorServo.targetPosition = maxPos;
+			// move flicker ramp to shoot position
 		//}
 		//else if (gamepad2.dpad_down)
 		//{
-			//this.armDcMotorServo.targetPosition = minPos;
+			//move flicker ramp to load position
 		//}
 		//else if (gamepad2.a)
 		//{

@@ -50,7 +50,7 @@ import org.firstinspires.ftc.teamcode.util.Handler;
  */
 
 @TeleOp(name="TeleOpMecanum", group="TeleOp")
-public class  TeleOpMecanum extends OpMode {
+public class TeleOpMecanum extends OpMode {
 
 	//region Motors
 	MecanumDriveSystem driveSystem;

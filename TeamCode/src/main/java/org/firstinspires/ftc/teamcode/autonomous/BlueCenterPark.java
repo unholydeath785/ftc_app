@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.teamcode.robot.*;
 import org.firstinspires.ftc.teamcode.util.Handler;
+import org.firstinspires.ftc.teamcode.util.ramp.ExponentialRamp;
+
 /*
  * Created by EvanCoulson on 10/26/16.
  *
@@ -26,6 +28,7 @@ public class BlueCenterPark extends AutonomousOpMode {
     private HardwareMap hardwareMap;
     private FlickerSystem flickerSystem;
     private MecanumDriveSystem driveSystem;
+    private ExponentialRamp ramp;
 
     public void initialzeAllDevices(HardwareMap map) {
         this.hardwareMap = map;
@@ -37,20 +40,16 @@ public class BlueCenterPark extends AutonomousOpMode {
     @Override
     public void runOpMode() {
         initialzeAllDevices(hardwareMap);
-        drive();
-        int i = 0;
-        while (i < 2) {
-            shoot();
-            i++;
-        }
-        drive();
+        drive(100);
+        shoot();
+        drive(2000);
         park();
     }
 
-    public void drive() {
+    public void drive(int targetPosition) {
         this.driveSystem.runUsingEncoders();
         try {
-            driveWithEncoders(2.0, 1.0);
+            driveWithEncoders(targetPosition, 1.0);
         } catch(Exception e) {
         }
     }
@@ -60,6 +59,12 @@ public class BlueCenterPark extends AutonomousOpMode {
     }
 
     public void park() {
+
+        boolean park = this.driveSystem.anyMotorsBusy();
+        if(!park){
+            this.driveSystem.drive(0.0); //use drive or driveWithEncoder?
+        }
+
     }
    /*
         drive:

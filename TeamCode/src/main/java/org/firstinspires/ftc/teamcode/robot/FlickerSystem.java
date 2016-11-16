@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.teamcode.teleop.TeleOpMecanum;
 import org.firstinspires.ftc.teamcode.util.ramp.ExponentialRamp;
@@ -31,6 +32,7 @@ public class FlickerSystem {
     private DcMotor flicker;
     private Servo loadServo;
     private ServoPositions position;
+    private Telemetry telemetry;
 
     public FlickerSystem(HardwareMap map) {
         this.flicker = map.dcMotor.get("flicker");
@@ -40,37 +42,49 @@ public class FlickerSystem {
 
     public void shoot() {
         if (!flicker.isBusy()) {
-            setShootPosition();
-            flicker.setTargetPosition(flicker.getCurrentPosition() + 1120);
+            flicker.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             flicker.setDirection(DcMotor.Direction.FORWARD);
-            flicker.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            if (telemetry != null) {
+                telemetry.addData("Current Position: ", flicker.getCurrentPosition() + "º");
+                telemetry.addData("Taregt Position: ", (flicker.getCurrentPosition() + 1120) + "º");
+            }
+            flicker.setTargetPosition(flicker.getCurrentPosition() + 1120);
             flicker.setPower(0.8);
-            setLoadPosition();
         }
     }
 
     public void setLoadPosition() {
         loadServo.setDirection(Servo.Direction.FORWARD);
-        loadServo.setPosition(45);
+        loadServo.setPosition(0.55);
         this.position = ServoPositions.FLICKERLOAD;
 
     }
 
     public void setShootPosition() {
         loadServo.setDirection(Servo.Direction.REVERSE);
-        loadServo.setPosition(315);
+        loadServo.setPosition(0.60);
         this.position = ServoPositions.FLICKERLOAD;
     }
+
+    public void togglePosition() {
+        if (telemetry != null) {
+            telemetry.addData("Current Position: ", this.loadServo.getPosition() + "º");
+        }
+        if (this.position == ServoPositions.FLICKERLOAD) {
+            setShootPosition();
+        } else {
+            setLoadPosition();
+        }
+    }
+
+    public void setDebugMode(Telemetry telemetry) {
+        this.telemetry = telemetry;
+    }
+
+
 
     private enum ServoPositions {
         FLICKERLOAD,
         FLICKERSHOOT
     }
-
-    private enum BallStage {
-        STAGE_1,
-        STAGE_2,
-        STAGE_3
-    }
-
 }

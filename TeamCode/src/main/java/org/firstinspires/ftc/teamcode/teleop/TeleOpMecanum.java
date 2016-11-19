@@ -68,6 +68,7 @@ public class TeleOpMecanum extends OpMode {
     private Button flickerButton;
     private Button flickerShootPositionButton;
     private Button flickerLoadPositionButton;
+    private FlickerSystem flick;
 
     //private DcMotorServo armDcMotorServo;
 	//double climbPos = 2.0; //TODO: Figure out the correct value
@@ -89,6 +90,7 @@ public class TeleOpMecanum extends OpMode {
 	{
         driveSystem = new MecanumDriveSystem();
         this.driveSystem.init(this.hardwareMap);
+        flick = new FlickerSystem(this.hardwareMap);
 
         //this.armDcMotorServo = new DcMotorServo();
         //this.armDcMotorServo.init(this.hardwareMap, "armMotor", "armServo");
@@ -175,7 +177,7 @@ public class TeleOpMecanum extends OpMode {
                 @Override
                 public void invoke()
                 {
-                    //move flicker
+                    flick.shoot();
                 }
             };
         this.flickerButton.releasedHandler =
@@ -184,7 +186,7 @@ public class TeleOpMecanum extends OpMode {
                 @Override
                 public void invoke()
                 {
-                    //stop flicker
+                    flick.stop();
                 }
             };
 
@@ -204,7 +206,7 @@ public class TeleOpMecanum extends OpMode {
                     @Override
                     public void invoke()
                     {
-                        //move flicker
+                        flick.setShootPosition();
                     }
                 };
         this.flickerShootPositionButton.releasedHandler =
@@ -213,7 +215,7 @@ public class TeleOpMecanum extends OpMode {
                     @Override
                     public void invoke()
                     {
-                        //stop flicker
+                        //
                     }
                 };
 
@@ -233,7 +235,7 @@ public class TeleOpMecanum extends OpMode {
                     @Override
                     public void invoke()
                     {
-                        //move flicker
+                        flick.setLoadPosition();
                     }
                 };
         this.flickerLoadPositionButton.releasedHandler =
@@ -242,7 +244,7 @@ public class TeleOpMecanum extends OpMode {
                     @Override
                     public void invoke()
                     {
-                        //stop flicker
+                        //
                     }
                 };
 	}

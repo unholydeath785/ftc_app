@@ -1,14 +1,11 @@
 package org.firstinspires.ftc.teamcode.robot;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.teamcode.teleop.TeleOpMecanum;
-import org.firstinspires.ftc.teamcode.util.ramp.ExponentialRamp;
-import org.firstinspires.ftc.teamcode.util.ramp.Ramp;
 
 /**
  * Created by jacks on 11/7/2016.
@@ -16,59 +13,63 @@ import org.firstinspires.ftc.teamcode.util.ramp.Ramp;
  *
  */
 
-//              ___                   ___          ___           ___           ___           ___                    ___                       ___                       ___           ___
-//             /  /\                 /  /|        /  /\         /__/|         /  /\         /  /\                  /  /\          ___        /  /\          ___        /  /\         /__/\
-//            /  /:/_               /  /:/       /  /:/        |  |:|        /  /:/_       /  /::\                /  /:/_        /__/|      /  /:/_        /  /\      /  /:/_       |  |::\
-//           /  /:/ /\  ___        /  /:/       /  /:/         |  |:|       /  /:/ /\     /  /:/\:\              /  /:/ /\      |  |:|     /  /:/ /\      /  /:/     /  /:/ /\      |  |:|:\
-//          /  /:/ /:/ /__/\      /__/::\ __   /  /:/  ___   __|  |:|      /  /:/ /:/_   /  /:/~/:/             /  /:/ /::\     |  |:|    /  /:/ /::\    /  /:/     /  /:/ /:/_   __|__|:|\:\
-//         /__/:/ /:/  \  \:\     \__\/\:\ /\ /__/:/  /  /\ /__/\_|:|____ /__/:/ /:/ /\ /__/:/ /:/___          /__/:/ /:/\:\  __|__|:|   /__/:/ /:/\:\  /  /::\    /__/:/ /:/ /\ /__/::::| \:\
-//         \  \:\/:/   \  \:\ __    \  \:\//  \  \:\ /  /:/ \  \:\/:::::/ \  \:\/:/ /:/ \  \:\/:::::/          \  \:\/:/~/:/ /__/::::\   \  \:\/:/~/:/ /__/:/\:\   \  \:\/:/ /:/ \  \:\~~\__\/
-//         \  \::/     \  \:\/:|    \__\:/    \  \:\  /:/   \  \::/~~~~   \  \::/ /:/   \  \::/~~~~            \  \::/ /:/     ~\~~\:\   \  \::/ /:/  \__\/  \:\   \  \::/ /:/   \  \:\
-//         \  \:\      \  \:: /    /  /:/     \  \:\/:/     \  \:\        \  \:\/:/     \  \:\                 \__\/ /:/        \  \:\   \__\/ /:/        \  \:\   \  \:\/:/     \  \:\
-//         \  \:\      \  \ /     /__/ /      \  \::/       \  \:\        \  \::/       \  \:\                  /__/:/          \__\/     /__/:/          \__\/    \  \::/       \  \:\
-//         \__\/       \__\/      \__\/       \__\/         \__\/         \__\/         \__\/                  \__\/                     \__\/                     \__\/         \__\/
+//              ___                   ___           ___           ___           ___           ___                    ___                       ___                       ___           ___
+//             /  /\                  /  /|         /  /\         /__/|         /  /\         /  /\                  /  /\          ___        /  /\          ___        /  /\         /__/\
+//            /  /:/_                /  /:/        /  /:/        |  |:|        /  /:/_       /  /::\                /  /:/_        /__/|      /  /:/_        /  /\      /  /:/_       |  |::\
+//           /  /:/ /\  ___         /  /:/        /  /:/         |  |:|       /  /:/ /\     /  /:/\:\              /  /:/ /\      |  |:|     /  /:/ /\      /  /:/     /  /:/ /\      |  |:|:\
+//          /  /:/ /:/ /__/\       /  /::\ __    /  /:/  ___   __|  |:|      /  /:/ /:/_   /  /:/~/:/             /  /:/ /::\     |  |:|    /  /:/ /::\    /  /:/     /  /:/ /:/_   __|__|:|\:\
+//         /__/:/ /:/  \  \:\     /  / /\:\  /\ /__/:/  /  /\ /__/\_|:|____ /__/:/ /:/ /\ /__/:/ /:/___          /__/:/ /:/\:\  __|__|:|   /__/:/ /:/\:\  /  /::\    /__/:/ /:/ /\ /__/::::| \:\
+//         \  \:\/:/   \  \:\ __ /__/ / \:\/ /  \  \:\ /  /:/ \  \:\/:::::/ \  \:\/:/ /:/ \  \:\/:::::/          \  \:\/:/~/:/ /__/::::\   \  \:\/:/~/:/ /__/:/\:\   \  \:\/:/ /:/ \  \:\~~\__\/
+//         \  \::/     \  \:\/:| \__\/__\: /    \  \:\  /:/   \  \::/~~~~   \  \::/ /:/   \  \::/~~~~            \  \::/ /:/     ~\~~\:\   \  \::/ /:/  \__\/  \:\   \  \::/ /:/   \  \:\
+//         \  \:\      \  \:: /     /  /: /     \  \:\/:/     \  \:\        \  \:\/:/     \  \:\                 \__\/ /:/        \  \:\   \__\/ /:/        \  \:\   \  \:\/:/     \  \:\
+//         \  \:\      \  \ /      /__/  /      \  \::/       \  \:\        \  \::/       \  \:\                  /__/:/          \__\/     /__/:/          \__\/    \  \::/       \  \:\
+//         \__\/       \__\/       \__\/        \__\/         \__\/         \__\/         \__\/                  \__\/                     \__\/                     \__\/         \__\/
 
 public class FlickerSystem {
     private DcMotor flicker;
-    private Servo loadServo;
+    private Servo loadWing;
     private ServoPositions position;
     private Telemetry telemetry;
 
     public FlickerSystem(HardwareMap map) {
         this.flicker = map.dcMotor.get("flicker");
-        this.loadServo = map.servo.get("flickerLoad");
+        this.loadWing = map.servo.get("flickerLoad");
         this.position = ServoPositions.FLICKERLOAD;
+        flicker.setDirection(DcMotor.Direction.REVERSE);
     }
 
     public void shoot() {
-        if (!flicker.isBusy()) {
-            flicker.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            flicker.setDirection(DcMotor.Direction.FORWARD);
-            if (telemetry != null) {
-                telemetry.addData("Current Position: ", flicker.getCurrentPosition() + "º");
-                telemetry.addData("Taregt Position: ", (flicker.getCurrentPosition() + 1120) + "º");
-            }
-            flicker.setTargetPosition(flicker.getCurrentPosition() + 1120);
+//        if (!flicker.isBusy()) {
+//            flicker.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            if (telemetry != null) {
+//                telemetry.addData("Current Position: ", flicker.getCurrentPosition() + "º");
+//                telemetry.addData("Taregt Position: ", (flicker.getCurrentPosition() + 1120) + "º");
+//            }
+//            flicker.setTargetPosition(flicker.getCurrentPosition() + 1120);
+//          }
+        if (this.position == ServoPositions.FLICKERSHOOT) {
             flicker.setPower(0.8);
         }
     }
 
-    public void setLoadPosition() {
-        loadServo.setDirection(Servo.Direction.FORWARD);
-        loadServo.setPosition(0.55);
-        this.position = ServoPositions.FLICKERLOAD;
+    public void stop() {
+        flicker.setPower(0.0);
+    }
 
+    public void setLoadPosition() {
+        loadWing.setPosition(0.50);
+        //.5 or .6
+        this.position = ServoPositions.FLICKERSHOOT;
     }
 
     public void setShootPosition() {
-        loadServo.setDirection(Servo.Direction.REVERSE);
-        loadServo.setPosition(0.60);
+        loadWing.setPosition(0.46);
         this.position = ServoPositions.FLICKERLOAD;
     }
 
     public void togglePosition() {
         if (telemetry != null) {
-            telemetry.addData("Current Position: ", this.loadServo.getPosition() + "º");
+            telemetry.addData("Current Position: ", this.loadWing.getPosition() + "º");
         }
         if (this.position == ServoPositions.FLICKERLOAD) {
             setShootPosition();

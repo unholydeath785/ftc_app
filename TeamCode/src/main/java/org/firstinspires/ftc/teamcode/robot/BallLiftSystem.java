@@ -14,28 +14,42 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class BallLiftSystem {
     private HardwareMap map;
     private DcMotor lifter;
+    private DcMotor belt;
     private DigitalChannel inputStream;
     private Telemetry telemetry;
     private LiftPosition position;
 
     private boolean debug;
-    private boolean running;
 
     public BallLiftSystem(HardwareMap map) {
         this.map = map;
-        this.lifter = map.dcMotor.get("ballLifterMotor");
-        this.inputStream = map.digitalChannel.get("ballLifterSwitch");
+        this.lifter = map.dcMotor.get("ballLiftMotor");
+        this.belt = map.dcMotor.get("ballBeltMotor");
+        //this.inputStream = map.digitalChannel.get("ballLifterSwitch");
         this.position = LiftPosition.AT_SWITCH;
     }
 
-    public void spin() {
-        while (running) {
-            lifter.setPower(0.42);
-            lifter.setDirection(DcMotorSimple.Direction.FORWARD);
-            lifter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            lifter.setTargetPosition(lifter.getCurrentPosition() + 1120);
-        }
+    public void runLift() {
+        lifter.setPower(0.42);
+        lifter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lifter.setTargetPosition(lifter.getCurrentPosition() + 1120);
     }
+
+    public void stopLift() {
+        lifter.setPower(0.0);
+    }
+
+
+    public void runBelt() {
+        belt.setPower(0.42);
+        belt.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        belt.setTargetPosition(belt.getCurrentPosition() + 1120);
+    }
+
+    public void stopBelt() {
+        belt.setPower(0);
+    }
+
 
     public void runToSwitchPosition() {
 
@@ -68,10 +82,6 @@ public class BallLiftSystem {
     public void setDebug(Telemetry telemetry) {
         this.telemetry = telemetry;
         this.debug = true;
-    }
-
-    public void setSpinning(boolean running) {
-        this.running = running;
     }
 
     private enum LiftPosition {

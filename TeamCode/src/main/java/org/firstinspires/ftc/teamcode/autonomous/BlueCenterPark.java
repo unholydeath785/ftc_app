@@ -44,7 +44,8 @@ public class BlueCenterPark extends AutonomousOpMode {
     public void runOpMode() {
         initialzeAllDevices(hardwareMap);
         drive(1.75);
-        ballSystem.runLift(true, true);
+        ballSystem.runBelt(3.0);
+        ballSystem.runLift(2.0);
         shoot();
         drive(4);
         park();
@@ -62,7 +63,7 @@ public class BlueCenterPark extends AutonomousOpMode {
         flickerSystem.setShootPosition();
         flickerSystem.shoot();
         flickerSystem.setLoadPosition();
-        ballSystem.runLift(true, true);
+        ballSystem.runLift(1.0);
     }
 
     public void park() {

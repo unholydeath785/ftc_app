@@ -123,8 +123,8 @@ public class TeleOpMecanum extends OpMode {
                     @Override
                     public void invoke()
                     {
-                        ballLift.runBelt(true, false);
-                        ballLift.runLift(true, false);
+                        ballLift.runBelt(true);
+                        ballLift.runLift(true);
                     }
                 };
         this.ballLiftFowardButton.releasedHandler =
@@ -155,8 +155,8 @@ public class TeleOpMecanum extends OpMode {
                     @Override
                     public void invoke()
                     {
-                        ballLift.runLift(false, false);
-                        ballLift.runBelt(false, false);
+                        ballLift.runLift(false);
+                        ballLift.runBelt(false);
                     }
                 };
         this.ballLiftReverseButton.releasedHandler =
@@ -327,6 +327,7 @@ public class TeleOpMecanum extends OpMode {
         double leftX = gamepad1.left_stick_x;
         double leftY = gamepad1.left_stick_y;
 		telemetry.addData("Text", rightX + ", " + rightY + ", " + leftX + ", " + leftY);
+
 		//telemetry.addData("pot", this.armDcMotorServo.getCurrentPosition());
 		//telemetry.addData("targetPosition",this.armDcMotorServo.targetPosition);
 		//telemetry.addData("rightWingPos",servoRightWing.getPosition());

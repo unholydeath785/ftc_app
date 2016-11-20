@@ -28,11 +28,14 @@ public class BlueCenterPark extends AutonomousOpMode {
     private HardwareMap hardwareMap;
     private FlickerSystem flickerSystem;
     private MecanumDriveSystem driveSystem;
+    private BallLiftSystem ballSystem;
     private ExponentialRamp ramp;
+    public boolean autonomous = true;
 
     public void initialzeAllDevices(HardwareMap map) {
         this.hardwareMap = map;
         this.flickerSystem = new FlickerSystem(map);
+        this.ballSystem = new BallLiftSystem(map);
         this.driveSystem = new MecanumDriveSystem();
         this.driveSystem.init(map);
     }
@@ -40,13 +43,14 @@ public class BlueCenterPark extends AutonomousOpMode {
     @Override
     public void runOpMode() {
         initialzeAllDevices(hardwareMap);
-        drive(100);
+        drive(1.75);
+        ballSystem.runLift(true, true);
         shoot();
-        drive(2000);
+        drive(4);
         park();
     }
 
-    public void drive(int targetPosition) {
+    public void drive(double targetPosition) {
         this.driveSystem.runUsingEncoders();
         try {
             driveWithEncoders(targetPosition, 1.0);
@@ -55,7 +59,10 @@ public class BlueCenterPark extends AutonomousOpMode {
     }
 
     public void shoot() {
+        flickerSystem.setShootPosition();
         flickerSystem.shoot();
+        flickerSystem.setLoadPosition();
+        ballSystem.runLift(true, true);
     }
 
     public void park() {

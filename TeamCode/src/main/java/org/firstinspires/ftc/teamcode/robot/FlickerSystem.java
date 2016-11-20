@@ -39,15 +39,13 @@ public class FlickerSystem {
     }
 
     public void shoot() {
-//        if (!flicker.isBusy()) {
-//            flicker.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            if (telemetry != null) {
-//                telemetry.addData("Current Position: ", flicker.getCurrentPosition() + "º");
-//                telemetry.addData("Taregt Position: ", (flicker.getCurrentPosition() + 1120) + "º");
-//            }
-//            flicker.setTargetPosition(flicker.getCurrentPosition() + 1120);
-//          }
-        if (this.position == ServoPositions.FLICKERSHOOT) {
+        if (position == ServoPositions.FLICKERSHOOT) {
+            flicker.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            if (telemetry != null) {
+                telemetry.addData("Current Position: ", flicker.getCurrentPosition() + "º");
+                telemetry.addData("Taregt Position: ", (flicker.getCurrentPosition() + 1120) + "º");
+            }
+            flicker.setTargetPosition(flicker.getCurrentPosition() + 1120);
             flicker.setPower(0.8);
         }
     }
@@ -57,14 +55,14 @@ public class FlickerSystem {
     }
 
     public void setLoadPosition() {
-        loadWing.setPosition(0.50);
+        loadWing.setPosition(0.51);
         //.5 or .6
-        this.position = ServoPositions.FLICKERSHOOT;
+        this.position = ServoPositions.FLICKERLOAD;
     }
 
     public void setShootPosition() {
         loadWing.setPosition(0.46);
-        this.position = ServoPositions.FLICKERLOAD;
+        this.position = ServoPositions.FLICKERSHOOT;
     }
 
     public void togglePosition() {

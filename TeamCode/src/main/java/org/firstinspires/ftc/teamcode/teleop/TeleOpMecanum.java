@@ -63,12 +63,14 @@ public class TeleOpMecanum extends OpMode {
 
 	//AnalogInput armPotentiometer;
 
-    private Button climberReleaseButton;
-    private Button leftWingButton;
     private Button flickerButton;
     private Button flickerShootPositionButton;
     private Button flickerLoadPositionButton;
+
+    private Button ballLiftFowardButton;
+    private Button ballLiftReverseButton;
     private FlickerSystem flick;
+    private BallLiftSystem ballLift;
 
     //private DcMotorServo armDcMotorServo;
 	//double climbPos = 2.0; //TODO: Figure out the correct value
@@ -91,6 +93,7 @@ public class TeleOpMecanum extends OpMode {
         driveSystem = new MecanumDriveSystem();
         this.driveSystem.init(this.hardwareMap);
         flick = new FlickerSystem(this.hardwareMap);
+        ballLift = new BallLiftSystem(this.hardwareMap);
 
         //this.armDcMotorServo = new DcMotorServo();
         //this.armDcMotorServo.init(this.hardwareMap, "armMotor", "armServo");
@@ -103,63 +106,72 @@ public class TeleOpMecanum extends OpMode {
 		//servoRightWing = hardwareMap.servo.get("servoRightWing");
 		//servoClimberRelease = hardwareMap.servo.get("servoClimberRelease");
 
-        this.climberReleaseButton = new Button();
-        this.climberReleaseButton.isPressed =
-            new Func<Boolean>()
-            {
-                @Override
-                public Boolean value()
-                {
-                return gamepad2.b;
-                }
-            };
-        this.climberReleaseButton.pressedHandler =
-            new Handler()
-            {
-                @Override
-                public void invoke()
-                {
-                    driveSystem.motorBackLeft.setPower(1);
-                }
-            };
-        this.climberReleaseButton.releasedHandler =
-            new Handler()
-            {
-                @Override
-                public void invoke()
-                {
-                    driveSystem.motorBackLeft.setPower(0);
-                }
-            };
+        this.ballLiftFowardButton = new Button();
 
-        this.leftWingButton = new Button();
-        this.leftWingButton.isPressed =
-            new Func<Boolean>()
-            {
-                @Override
-                public Boolean value()
+        this.ballLiftFowardButton.isPressed =
+                new Func<Boolean>()
                 {
-                    return gamepad2.a;
-                }
-            };
-        this.leftWingButton.pressedHandler =
-            new Handler()
-            {
-                @Override
-                public void invoke()
+                    @Override
+                    public Boolean value()
+                    {
+                        return gamepad2.right_bumper;
+                    }
+                };
+        this.ballLiftFowardButton.pressedHandler =
+                new Handler()
                 {
-                    driveSystem.motorFrontRight.setPower(1);
-                }
-            };
-        this.leftWingButton.releasedHandler =
-            new Handler()
-            {
-                @Override
-                public void invoke()
+                    @Override
+                    public void invoke()
+                    {
+                        ballLift.runBelt(true, false);
+                        ballLift.runLift(true, false);
+                    }
+                };
+        this.ballLiftFowardButton.releasedHandler =
+                new Handler()
                 {
-                    driveSystem.motorFrontRight.setPower(0);
-                }
-            };
+                    @Override
+                    public void invoke()
+                    {
+                        ballLift.stopBelt();
+                        ballLift.stopLift();
+                    }
+                };
+
+        this.ballLiftReverseButton = new Button();
+
+        this.ballLiftReverseButton.isPressed =
+                new Func<Boolean>()
+                {
+                    @Override
+                    public Boolean value()
+                    {
+                        return gamepad2.left_bumper;
+                    }
+                };
+        this.ballLiftReverseButton.pressedHandler =
+                new Handler()
+                {
+                    @Override
+                    public void invoke()
+                    {
+                        ballLift.runLift(false, false);
+                        ballLift.runBelt(false, false);
+                    }
+                };
+        this.ballLiftReverseButton.releasedHandler =
+                new Handler()
+                {
+                    @Override
+                    public void invoke()
+                    {
+                        ballLift.stopBelt();
+                        ballLift.stopLift();
+                    }
+                };
+
+
+
 
         this.flickerButton = new Button(); //TODO: Flicker System implementation whoever is doing that
         this.flickerButton.isPressed =
@@ -168,7 +180,7 @@ public class TeleOpMecanum extends OpMode {
                     @Override
                     public Boolean value()
                     {
-                        return gamepad1.right_trigger > 0;
+                        return gamepad2.right_trigger > 0;
                     }
                 };
         this.flickerButton.pressedHandler =
@@ -247,6 +259,8 @@ public class TeleOpMecanum extends OpMode {
                         //
                     }
                 };
+
+
 	}
 
 	/*
@@ -263,13 +277,13 @@ public class TeleOpMecanum extends OpMode {
 		// the robot more precisely at slower speeds.
         this.driveSystem.mecanumDrive(gamepad1.right_stick_x, gamepad1.right_stick_y, gamepad1.left_stick_x, gamepad1.left_stick_y);
 
-        climberReleaseButton.testAndHandle();
-        leftWingButton.testAndHandle();
+
         flickerButton.testAndHandle();
         flickerShootPositionButton.testAndHandle();
         flickerLoadPositionButton.testAndHandle();
-
-		//region Winch
+        ballLiftFowardButton.testAndHandle();
+        ballLiftReverseButton.testAndHandle();
+        //region Winch
 		//if(gamepad1.right_trigger > 0 && gamepad2.right_trigger > 0)
 		//{
             //winchMotor.setPower(1.0);

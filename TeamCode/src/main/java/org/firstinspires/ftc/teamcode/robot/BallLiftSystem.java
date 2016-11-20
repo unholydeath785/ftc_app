@@ -12,12 +12,14 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  */
 
 public class BallLiftSystem {
+
     private HardwareMap map;
     private DcMotor lifter;
     private DcMotor belt;
     private DigitalChannel inputStream;
     private Telemetry telemetry;
     private LiftPosition position;
+    public boolean autonomous;
 
     private boolean debug;
 
@@ -29,21 +31,50 @@ public class BallLiftSystem {
         this.position = LiftPosition.AT_SWITCH;
     }
 
-    public void runLift() {
-        lifter.setPower(0.42);
-        lifter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        lifter.setTargetPosition(lifter.getCurrentPosition() + 1120);
+    public void runLift(boolean foward, boolean autonomous) {
+        if (autonomous) {
+            if (foward) {
+                lifter.setDirection(DcMotorSimple.Direction.FORWARD);
+            } else {
+                lifter.setDirection(DcMotorSimple.Direction.REVERSE);
+            }
+            lifter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            lifter.setTargetPosition(lifter.getCurrentPosition() + 1120);
+            lifter.setPower(0.42);
+        }
+        else
+        {
+            lifter.setDirection(DcMotorSimple.Direction.FORWARD);
+            lifter.setPower(0.42);
+
+        }
     }
+
+
+
 
     public void stopLift() {
         lifter.setPower(0.0);
     }
 
+    public void runBelt(boolean foward, boolean autonomous) {
 
-    public void runBelt() {
-        belt.setPower(0.42);
-        belt.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        belt.setTargetPosition(belt.getCurrentPosition() + 1120);
+
+        if(autonomous) {
+            if (foward) {
+                belt.setDirection(DcMotorSimple.Direction.FORWARD);
+            } else {
+                belt.setDirection(DcMotorSimple.Direction.REVERSE);
+            }
+            belt.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            belt.setTargetPosition(belt.getCurrentPosition() + 1120);
+            belt.setPower(0.42);
+        }
+        else{
+            belt.setDirection(DcMotorSimple.Direction.FORWARD);
+            belt.setPower(0.42);
+
+        }
     }
 
     public void stopBelt() {

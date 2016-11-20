@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -6,6 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.teamcode.robot.*;
@@ -24,46 +26,40 @@ import org.firstinspires.ftc.teamcode.util.ramp.ExponentialRamp;
      \_______\/ \_____\/ \_____\/ \_____\/     \_____\/ \_____\/ \__\/ \__\/   \__\/    \_____\/ \_\/ \_\/     \_\/     \__\/\__\/ \_\/ \_\/ \__\/\__\/
 
  */
+@Autonomous(name="AutonomousMode", group="Bot")
 public class BlueCenterPark extends AutonomousOpMode {
-    private HardwareMap hardwareMap;
     private FlickerSystem flickerSystem;
-    private MecanumDriveSystem driveSystem;
     private BallLiftSystem ballSystem;
-    private ExponentialRamp ramp;
-    public boolean autonomous = true;
 
     public void initialzeAllDevices(HardwareMap map) {
+
         this.hardwareMap = map;
         this.flickerSystem = new FlickerSystem(map);
         this.ballSystem = new BallLiftSystem(map);
-        this.driveSystem = new MecanumDriveSystem();
-        this.driveSystem.init(map);
     }
 
     @Override
     public void runOpMode() {
-        initialzeAllDevices(hardwareMap);
+        initialzeAllDevices(this.hardwareMap);
         drive(1.75);
-        ballSystem.runBelt(3.0);
-        ballSystem.runLift(2.0);
         shoot();
         drive(4);
         park();
     }
 
     public void drive(double targetPosition) {
-        this.driveSystem.runUsingEncoders();
         try {
-            driveWithEncoders(targetPosition, 1.0);
-        } catch(Exception e) {
+            driveWithEncoders(targetPosition, 0.8);
+        } catch (Exception e) {
+            throw new NullPointerException(e.toString());
         }
-    }
+     }
 
     public void shoot() {
         flickerSystem.setShootPosition();
         flickerSystem.shoot();
-        flickerSystem.setLoadPosition();
-        ballSystem.runLift(1.0);
+        //flickerSystem.setLoadPosition();
+        //ballSystem.runLift(1.0);
     }
 
     public void park() {

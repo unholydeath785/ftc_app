@@ -51,32 +51,14 @@ public class TeleOpMecanum extends OpMode {
 	//region Motors
 	MecanumDriveSystem driveSystem;
 
-	//DcMotor flickerMotor;
-	//DcMotor winchMotor;
-	//endregion
-
-	//region Servos
-	//Servo servoRightWing;
-	//Servo servoLeftWing;
-	//Servo servoClimberRelease;
-	//endregion
-
-	//AnalogInput armPotentiometer;
-
     private Button flickerButton;
     private Button flickerShootPositionButton;
     private Button flickerLoadPositionButton;
 
     private Button ballLiftFowardButton;
     private Button ballLiftReverseButton;
-    private FlickerSystem flick;
+    private FlickerSystem flicker;
     private BallLiftSystem ballLift;
-
-    //private DcMotorServo armDcMotorServo;
-	//double climbPos = 2.0; //TODO: Figure out the correct value
-	//double extendPos = 1.1; //TODO: Figure out the correct value
-	//double maxPos = 4.0; //TODO: Figure out the correct value
-	//double minPos = 1.0; //TODO: Figure out the correct value
 
 	public TeleOpMecanum() {
 
@@ -92,19 +74,8 @@ public class TeleOpMecanum extends OpMode {
 	{
         driveSystem = new MecanumDriveSystem();
         this.driveSystem.init(this.hardwareMap);
-        flick = new FlickerSystem(this.hardwareMap);
+        flicker = new FlickerSystem(this.hardwareMap);
         ballLift = new BallLiftSystem(this.hardwareMap);
-
-        //this.armDcMotorServo = new DcMotorServo();
-        //this.armDcMotorServo.init(this.hardwareMap, "armMotor", "armServo");
-        //this.armDcMotorServo.forwardPower = 0.5;
-        //this.armDcMotorServo.reversePower = 0.1;
-
-		//winchMotor = hardwareMap.dcMotor.get("winchMotor");
-
-		//servoLeftWing = hardwareMap.servo.get("servoLeftWing");
-		//servoRightWing = hardwareMap.servo.get("servoRightWing");
-		//servoClimberRelease = hardwareMap.servo.get("servoClimberRelease");
 
         this.ballLiftFowardButton = new Button();
 
@@ -123,8 +94,10 @@ public class TeleOpMecanum extends OpMode {
                     @Override
                     public void invoke()
                     {
+                        if (!flicker.isBallLoaded()) {
+                            ballLift.runLift(true);
+                        }
                         ballLift.runBelt(true);
-                        ballLift.runLift(true);
                     }
                 };
         this.ballLiftFowardButton.releasedHandler =
@@ -170,10 +143,7 @@ public class TeleOpMecanum extends OpMode {
                     }
                 };
 
-
-
-
-        this.flickerButton = new Button(); //TODO: Flicker System implementation whoever is doing that
+        this.flickerButton = new Button();
         this.flickerButton.isPressed =
             new Func<Boolean>()
                 {
@@ -189,7 +159,7 @@ public class TeleOpMecanum extends OpMode {
                 @Override
                 public void invoke()
                 {
-                    flick.shoot();
+                    flicker.shoot();
                 }
             };
         this.flickerButton.releasedHandler =
@@ -198,11 +168,11 @@ public class TeleOpMecanum extends OpMode {
                 @Override
                 public void invoke()
                 {
-                    flick.stop();
+                    flicker.stop();
                 }
             };
 
-        this.flickerShootPositionButton = new Button(); //TODO: Flicker System implementation whoever is doing that
+        this.flickerShootPositionButton = new Button();
         this.flickerShootPositionButton.isPressed =
                 new Func<Boolean>()
                 {
@@ -218,7 +188,7 @@ public class TeleOpMecanum extends OpMode {
                     @Override
                     public void invoke()
                     {
-                        flick.setShootPosition();
+                        flicker.setShootPosition();
                     }
                 };
         this.flickerShootPositionButton.releasedHandler =
@@ -231,7 +201,7 @@ public class TeleOpMecanum extends OpMode {
                     }
                 };
 
-        this.flickerLoadPositionButton = new Button(); //TODO: Flicker System implementation whoever is doing that
+        this.flickerLoadPositionButton = new Button();
         this.flickerLoadPositionButton.isPressed =
                 new Func<Boolean>()
                 {
@@ -247,7 +217,7 @@ public class TeleOpMecanum extends OpMode {
                     @Override
                     public void invoke()
                     {
-                        flick.setLoadPosition();
+                        flicker.setLoadPosition();
                     }
                 };
         this.flickerLoadPositionButton.releasedHandler =
@@ -259,8 +229,6 @@ public class TeleOpMecanum extends OpMode {
                         //
                     }
                 };
-
-
 	}
 
 	/*
@@ -271,67 +239,17 @@ public class TeleOpMecanum extends OpMode {
 	@Override
 	public void loop()
 	{
-		//double currentPos = 0;//armPotentiometer.getVoltage();
-
 		// scale the joystick value to make it easier to control
 		// the robot more precisely at slower speeds.
         this.driveSystem.mecanumDrive(gamepad1.right_stick_x, gamepad1.right_stick_y, gamepad1.left_stick_x, gamepad1.left_stick_y);
-
 
         flickerButton.testAndHandle();
         flickerShootPositionButton.testAndHandle();
         flickerLoadPositionButton.testAndHandle();
         ballLiftFowardButton.testAndHandle();
         ballLiftReverseButton.testAndHandle();
-        //region Winch
-		//if(gamepad1.right_trigger > 0 && gamepad2.right_trigger > 0)
-		//{
-            //winchMotor.setPower(1.0);
-		//}
-		//else if(gamepad1.left_trigger > 0 && gamepad2.left_trigger > 0)
-		//{
-			//winchMotor.setPower(-1.0);
-		//}
-		//else
-		//{
-			//winchMotor.setPower(0);
-		//}
-		//endregion
 
-		//if (gamepad2.dpad_up)
-		//{
-			// move flicker ramp to shoot position
-		//}
-		//else if (gamepad2.dpad_down)
-		//{
-			//move flicker ramp to load position
-		//}
-		//else if (gamepad2.a)
-		//{
-			//this.armDcMotorServo.targetPosition = extendPos;
-		//}
-		//else if (gamepad2.x)
-		//{
-			//this.armDcMotorServo.targetPosition = climbPos;
-		//}
-		//else
-		//{
-            // if none of the above buttons are currently held down,
-            // just hold the current position
-			//this.armDcMotorServo.targetPosition = this.armDcMotorServo.getCurrentPosition();
-		//}
-
-        //this.armDcMotorServo.loop();
-        double rightX = gamepad1.right_stick_x;
-        double rightY = gamepad1.right_stick_y;
-        double leftX = gamepad1.left_stick_x;
-        double leftY = gamepad1.left_stick_y;
-		telemetry.addData("Text", rightX + ", " + rightY + ", " + leftX + ", " + leftY);
-
-		//telemetry.addData("pot", this.armDcMotorServo.getCurrentPosition());
-		//telemetry.addData("targetPosition",this.armDcMotorServo.targetPosition);
-		//telemetry.addData("rightWingPos",servoRightWing.getPosition());
-		//telemetry.addData("leftWingPos",servoLeftWing.getPosition());
+		telemetry.addData("Text", gamepad1.right_stick_x + ", " + gamepad1.right_stick_y + ", " + gamepad1.left_stick_x + ", " + gamepad1.left_stick_y);
 	}
 
 	/*

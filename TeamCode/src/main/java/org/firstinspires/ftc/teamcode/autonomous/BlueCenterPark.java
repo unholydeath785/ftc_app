@@ -28,20 +28,19 @@ import org.firstinspires.ftc.teamcode.util.ramp.ExponentialRamp;
  */
 @Autonomous(name="AutonomousMode", group="Bot")
 public class BlueCenterPark extends AutonomousOpMode {
+    private final double DRIVE_POWER = 0.8;
+
     private FlickerSystem flickerSystem;
     private BallLiftSystem ballSystem;
 
-    public void initialzeAllDevices(HardwareMap map) {
-
-        this.hardwareMap = map;
-        this.flickerSystem = new FlickerSystem(map);
-        this.ballSystem = new BallLiftSystem(map);
-    }
-
     @Override
     public void runOpMode() {
-        initialzeAllDevices(this.hardwareMap);
+        initializeAllDevices();
+        this.flickerSystem = new FlickerSystem(this.hardwareMap);
+        this.ballSystem = new BallLiftSystem(this.hardwareMap);
         drive(1.75);
+        shoot();
+        load();
         shoot();
         drive(4);
         park();
@@ -49,7 +48,7 @@ public class BlueCenterPark extends AutonomousOpMode {
 
     public void drive(double targetPosition) {
         try {
-            driveWithEncoders(targetPosition, 0.8);
+            driveWithEncoders(targetPosition, DRIVE_POWER);
         } catch (Exception e) {
             throw new NullPointerException(e.toString());
         }
@@ -58,42 +57,25 @@ public class BlueCenterPark extends AutonomousOpMode {
     public void shoot() {
         flickerSystem.setShootPosition();
         flickerSystem.shoot();
-        //flickerSystem.setLoadPosition();
-        //ballSystem.runLift(1.0);
+        flickerSystem.setLoadPosition();
+    }
+
+    public void load() {
+        while (!flickerSystem.isBallLoaded()) {
+            ballSystem.runLift(true);
+            ballSystem.runBelt(true);
+        }
+        ballSystem.stopBelt();
+        ballSystem.stopLift();
     }
 
     public void park() {
+        try {
+            driveWithEncoders(0,0);
+        } catch (Exception e) {
 
-        boolean park = this.driveSystem.anyMotorsBusy();
-        if(!park){
-            this.driveSystem.drive(0.0); //use drive or driveWithEncoder?
         }
-
     }
-   /*
-        drive:
-         get four motor wheels from hardwaremap drive to BELUGA
-         stop
-
-       shoot:
-        flicker motor hardwareMap get flicker
-        do 2x
-            spin motor with encoders
-            turn with encoders 1 cycle
-
-       drive:
-        get four wheels from hwmap
-        while (not at x)
-           drive foward ramp up to 100%
-           if (approaching x)
-               ramp down exponential
-
-       park:
-        Pointy stick hit
-        keep going
-        stahp
-    */
-
 
 
 }

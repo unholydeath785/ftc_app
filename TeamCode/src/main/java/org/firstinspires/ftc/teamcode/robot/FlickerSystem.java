@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.robot;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcontroller.external.samples.SensorAdafruitRGB;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /**
@@ -26,28 +28,33 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 //         \__\/       \__\/       \__\/        \__\/         \__\/         \__\/         \__\/                  \__\/                     \__\/                     \__\/         \__\/
 
 public class FlickerSystem {
+
+    private final int ticksPerRotation = 1120;
+    private final double FLICKER_POWER = 0.8;
+    private final double SHOOT_POSITION = 0.5;
+    private final double LOAD_POSITION = 0.46;
+
+    private final int BASE_RED = 1;
+    private final int BASE_GREEN = 1;
+    private final int BASE_BLUE = 1;
+
     private DcMotor flicker;
     private Servo loadWing;
+    private ColorSensor colorSensor;
     private ServoPositions position;
-    private Telemetry telemetry;
 
     public FlickerSystem(HardwareMap map) {
         this.flicker = map.dcMotor.get("flicker");
         this.loadWing = map.servo.get("flickerLoad");
+        this.colorSensor = map.colorSensor.get("flickerColorDetector");
         this.position = ServoPositions.FLICKERLOAD;
         flicker.setDirection(DcMotor.Direction.REVERSE);
     }
 
     public void shoot() {
-        if (position == ServoPositions.FLICKERSHOOT) {
-            flicker.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            if (telemetry != null) {
-                telemetry.addData("Current Position: ", flicker.getCurrentPosition() + "º");
-                telemetry.addData("Taregt Position: ", (flicker.getCurrentPosition() + 1120) + "º");
-            }
-            flicker.setTargetPosition(flicker.getCurrentPosition() + 1120);
-            flicker.setPower(0.8);
-        }
+        flicker.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        flicker.setTargetPosition(flicker.getCurrentPosition() + revolutionsToTics(1));
+        flicker.setPower(FLICKER_POWER);
     }
 
     public void stop() {
@@ -55,20 +62,17 @@ public class FlickerSystem {
     }
 
     public void setLoadPosition() {
-        loadWing.setPosition(0.51);
+        loadWing.setPosition(SHOOT_POSITION);
         //.5 or .6
         this.position = ServoPositions.FLICKERLOAD;
     }
 
     public void setShootPosition() {
-        loadWing.setPosition(0.46);
+        loadWing.setPosition(LOAD_POSITION);
         this.position = ServoPositions.FLICKERSHOOT;
     }
 
     public void togglePosition() {
-        if (telemetry != null) {
-            telemetry.addData("Current Position: ", this.loadWing.getPosition() + "º");
-        }
         if (this.position == ServoPositions.FLICKERLOAD) {
             setShootPosition();
         } else {
@@ -76,13 +80,15 @@ public class FlickerSystem {
         }
     }
 
-    public void setDebugMode(Telemetry telemetry) {
-        this.telemetry = telemetry;
+    public boolean isBallLoaded() {
+        return colorSensor.red() == BASE_RED && colorSensor.green() == BASE_GREEN && colorSensor.blue() == BASE_BLUE || position == ServoPositions.FLICKERSHOOT;
     }
 
+    private int revolutionsToTics(double revolutions) {
+        return (int) Math.round(revolutions * this.ticksPerRotation);
+    }
 
-
-    private enum ServoPositions {
+    public enum ServoPositions {
         FLICKERLOAD,
         FLICKERSHOOT
     }

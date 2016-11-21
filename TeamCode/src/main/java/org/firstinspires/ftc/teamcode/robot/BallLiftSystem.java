@@ -13,12 +13,13 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class BallLiftSystem {
 
+    private final double LIFT_POWER = 0.42;
+    private final double BELT_POWER = 0.6;
+    private final int ticksPerRotation = 1120;
+
     private HardwareMap map;
     private DcMotor lifter;
     private DcMotor belt;
-    private DigitalChannel inputStream;
-    private Telemetry telemetry;
-    private LiftPosition position;
     public boolean autonomous;
 
     private boolean debug;
@@ -27,8 +28,6 @@ public class BallLiftSystem {
         this.map = map;
         this.lifter = map.dcMotor.get("ballLiftMotor");
         this.belt = map.dcMotor.get("ballBeltMotor");
-        //this.inputStream = map.digitalChannel.get("ballLifterSwitch");
-        this.position = LiftPosition.AT_SWITCH;
     }
 
     public void runLift(boolean isFoward) {
@@ -37,15 +36,14 @@ public class BallLiftSystem {
         else
             lifter.setDirection(DcMotorSimple.Direction.REVERSE);
         lifter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        lifter.setPower(0.42);
+        lifter.setPower(LIFT_POWER);
     }
 
     public void runLift(double revolutions) {
         while (lifter.isBusy()) {
             lifter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            int tics = (int)(1120 * revolutions);
-            lifter.setTargetPosition(lifter.getCurrentPosition() + tics);
-            lifter.setPower(0.42);
+            lifter.setTargetPosition(lifter.getCurrentPosition() + revolutionsToTics(revolutions));
+            lifter.setPower(LIFT_POWER);
         }
     }
 
@@ -59,57 +57,22 @@ public class BallLiftSystem {
         else
             belt.setDirection(DcMotorSimple.Direction.REVERSE);
         belt.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        belt.setPower(0.6);
+        belt.setPower(BELT_POWER);
     }
 
     public void runBelt(double revolutions) {
         while (belt.isBusy()) {
             belt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            int tics = (int)(1120 * revolutions);
-            belt.setTargetPosition(belt.getCurrentPosition() + tics);
-            belt.setPower(0.6);
+            belt.setTargetPosition(belt.getCurrentPosition() + revolutionsToTics(revolutions));
+            belt.setPower(BELT_POWER);
         }
     }
 
     public void stopBelt() {
-        belt.setPower(0);
+        belt.setPower(0.0);
     }
 
-
-    public void runToSwitchPosition() {
-        position = LiftPosition.AT_ENCODER;
-    }
-
-    public void runToEncoderPosition() {
-        position = LiftPosition.AT_SWITCH;
-    }
-
-    public void togglePosition() {
-        if (position == LiftPosition.AT_SWITCH) {
-            runToEncoderPosition();
-        } else {
-            runToSwitchPosition();
-        }
-    }
-
-    public boolean getState() {
-        try {
-            return inputStream.getState();
-        } catch (Exception e) {
-            if (debug) {
-                telemetry.addData("ERROR: ", "BALL LIFT INPUT STREAM IS NULL");
-            }
-            throw new NullPointerException("Null Ball Lift Stream");
-        }
-    }
-
-    public void setDebug(Telemetry telemetry) {
-        this.telemetry = telemetry;
-        this.debug = true;
-    }
-
-    private enum LiftPosition {
-        AT_SWITCH,
-        AT_ENCODER
+    private int revolutionsToTics(double revolutions) {
+        return (int) Math.round(revolutions * this.ticksPerRotation);
     }
 }

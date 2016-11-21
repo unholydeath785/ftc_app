@@ -28,45 +28,16 @@ import org.firstinspires.ftc.teamcode.util.ramp.ExponentialRamp;
  */
 @Autonomous(name="AutonomousMode", group="Bot")
 public class BlueCenterPark extends AutonomousOpMode {
-    private final double DRIVE_POWER = 0.8;
-
-    private FlickerSystem flickerSystem;
-    private BallLiftSystem ballSystem;
 
     @Override
     public void runOpMode() {
         initializeAllDevices();
-        this.flickerSystem = new FlickerSystem(this.hardwareMap);
-        this.ballSystem = new BallLiftSystem(this.hardwareMap);
         drive(1.75);
         shoot();
         load();
         shoot();
         drive(4);
         park();
-    }
-
-    public void drive(double targetPosition) {
-        try {
-            driveWithEncoders(targetPosition, DRIVE_POWER);
-        } catch (Exception e) {
-            throw new NullPointerException(e.toString());
-        }
-     }
-
-    public void shoot() {
-        flickerSystem.setShootPosition();
-        flickerSystem.shoot();
-        flickerSystem.setLoadPosition();
-    }
-
-    public void load() {
-        while (!flickerSystem.isBallLoaded()) {
-            ballSystem.runLift(true);
-            ballSystem.runBelt(true);
-        }
-        ballSystem.stopBelt();
-        ballSystem.stopLift();
     }
 
     public void park() {

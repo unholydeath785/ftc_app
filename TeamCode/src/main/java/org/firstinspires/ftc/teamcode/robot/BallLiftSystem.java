@@ -40,10 +40,11 @@ public class BallLiftSystem {
     }
 
     public void runLift(double revolutions) {
+        lifter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        lifter.setTargetPosition(lifter.getCurrentPosition() + revolutionsToTics(revolutions));
+        lifter.setPower(LIFT_POWER);
         while (lifter.isBusy()) {
-            lifter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            lifter.setTargetPosition(lifter.getCurrentPosition() + revolutionsToTics(revolutions));
-            lifter.setPower(LIFT_POWER);
+
         }
     }
 
@@ -61,10 +62,11 @@ public class BallLiftSystem {
     }
 
     public void runBelt(double revolutions) {
+        belt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        belt.setTargetPosition(belt.getCurrentPosition() + revolutionsToTics(revolutions));
+        belt.setPower(BELT_POWER);
         while (belt.isBusy()) {
-            belt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            belt.setTargetPosition(belt.getCurrentPosition() + revolutionsToTics(revolutions));
-            belt.setPower(BELT_POWER);
+
         }
     }
 

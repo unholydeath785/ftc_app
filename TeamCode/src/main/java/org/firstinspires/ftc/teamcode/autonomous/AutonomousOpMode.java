@@ -10,12 +10,18 @@ public abstract class AutonomousOpMode extends LinearOpMode
     MecanumDriveSystem driveSystem;
     LineFollowingSystem lineFollowingSystem;
     IMUSystem imuSystem;
+    FlickerSystem flickerSystem;
+    BallLiftSystem ballSystem;
+
+    private final double DRIVE_POWER = 0.8;
 
     void initializeAllDevices()
     {
         this.driveSystem.init(this.hardwareMap);
         this.imuSystem.init(this.hardwareMap);
         this.lineFollowingSystem.init(this.hardwareMap);
+        this.flickerSystem = new FlickerSystem(this.hardwareMap);
+        this.ballSystem = new BallLiftSystem(this.hardwareMap);
     }
 
     //colorSide tells if the color of the line we are following is on the left or right of the sensor
@@ -155,5 +161,32 @@ public abstract class AutonomousOpMode extends LinearOpMode
 
         // Always leave the screen looking pretty
         telemetry.update();
+    }
+
+    public void shoot() {
+        flickerSystem.setShootPosition();
+        flickerSystem.shoot();
+        try {
+            wait(2000);
+        } catch (Exception e) {
+        }
+        flickerSystem.setLoadPosition();
+    }
+
+    public void drive(double targetPosition) {
+        try {
+            driveWithEncoders(targetPosition, DRIVE_POWER);
+        } catch (Exception e) {
+            throw new NullPointerException(e.toString());
+        }
+    }
+
+    public void load() {
+        while (!flickerSystem.isBallLoaded()) {
+            ballSystem.runLift(true);
+            ballSystem.runBelt(true);
+        }
+        ballSystem.stopBelt();
+        ballSystem.stopLift();
     }
 }

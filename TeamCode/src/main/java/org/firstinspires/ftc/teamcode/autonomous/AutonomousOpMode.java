@@ -128,7 +128,7 @@ public abstract class AutonomousOpMode extends LinearOpMode
         return sign*ramp.value(diff);
     }
 
-    void driveWithEncoders(double revolutions, double maxPower) throws InterruptedException
+    void driveWithEncoders(double revolutions, double maxPower)
     {
         // How far are we to move, in ticks instead of revolutions?
         int ticks = this.driveSystem.revolutionsToTicks(revolutions);
@@ -165,9 +165,8 @@ public abstract class AutonomousOpMode extends LinearOpMode
     public void shoot() {
         flickerSystem.setShootPosition();
         flickerSystem.shoot();
-        try {
-            wait(2000);
-        } catch (Exception e) {
+        while (flickerSystem.isBusy()) {
+            this.idle();
         }
         flickerSystem.setLoadPosition();
     }

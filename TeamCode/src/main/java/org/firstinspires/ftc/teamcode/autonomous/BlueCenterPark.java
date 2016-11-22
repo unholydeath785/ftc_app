@@ -34,17 +34,11 @@ public class BlueCenterPark extends AutonomousOpMode {
     @Override
     public void runOpMode() {
         initializeAllDevices();
-        try {
-            driveWithEncoders(1.75, DRIVE_POWER);
-        } catch (Exception e) {
-        }
+        driveWithEncoders(1.75, DRIVE_POWER);
         shoot();
         load();
         shoot();
-        try {
-            driveWithEncoders(4, DRIVE_POWER);
-        } catch (Exception e) {
-        }
+        driveWithEncoders(4, DRIVE_POWER);
         park();
     }
 }

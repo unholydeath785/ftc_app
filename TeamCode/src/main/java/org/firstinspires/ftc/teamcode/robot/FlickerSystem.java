@@ -92,6 +92,10 @@ public class FlickerSystem {
         return (int) Math.round(revolutions * this.ticksPerRotation);
     }
 
+    public boolean isBusy() {
+        return flicker.isBusy();
+    }
+
     public enum ServoPositions {
         FLICKERLOAD,
         FLICKERSHOOT

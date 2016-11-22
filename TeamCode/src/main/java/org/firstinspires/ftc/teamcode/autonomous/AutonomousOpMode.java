@@ -15,9 +15,12 @@ public abstract class AutonomousOpMode extends LinearOpMode
 
     void initializeAllDevices()
     {
+        this.driveSystem = new MecanumDriveSystem();
+        this.imuSystem = new IMUSystem();
+        this.lineFollowingSystem = new LineFollowingSystem();
         this.driveSystem.init(this.hardwareMap);
-        this.imuSystem.init(this.hardwareMap);
-        this.lineFollowingSystem.init(this.hardwareMap);
+//        this.imuSystem.init(this.hardwareMap);
+//        this.lineFollowingSystem.init(this.hardwareMap);
         this.flickerSystem = new FlickerSystem(this.hardwareMap);
         this.ballSystem = new BallLiftSystem(this.hardwareMap);
     }

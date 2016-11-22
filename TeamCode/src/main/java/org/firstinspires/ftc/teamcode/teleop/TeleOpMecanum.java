@@ -159,7 +159,7 @@ public class TeleOpMecanum extends OpMode {
                 @Override
                 public void invoke()
                 {
-                    flicker.shoot();
+                    flicker.start();
                 }
             };
         this.flickerButton.releasedHandler =

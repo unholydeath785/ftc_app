@@ -57,6 +57,10 @@ public class FlickerSystem {
         flicker.setPower(FLICKER_POWER);
     }
 
+    public void start() {
+        flicker.setPower(FLICKER_POWER);
+    }
+
     public void stop() {
         flicker.setPower(0.0);
     }

@@ -29,24 +29,22 @@ import org.firstinspires.ftc.teamcode.util.ramp.ExponentialRamp;
 @Autonomous(name="AutonomousMode", group="Bot")
 public class BlueCenterPark extends AutonomousOpMode {
 
+    private final double DRIVE_POWER = 0.8;
+
     @Override
     public void runOpMode() {
         initializeAllDevices();
-        drive(1.75);
+        try {
+            driveWithEncoders(1.75, DRIVE_POWER);
+        } catch (Exception e) {
+        }
         shoot();
         load();
         shoot();
-        drive(4);
+        try {
+            driveWithEncoders(4, DRIVE_POWER);
+        } catch (Exception e) {
+        }
         park();
     }
-
-    public void park() {
-        try {
-            driveWithEncoders(0,0);
-        } catch (Exception e) {
-
-        }
-    }
-
-
 }

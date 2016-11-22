@@ -13,8 +13,6 @@ public abstract class AutonomousOpMode extends LinearOpMode
     FlickerSystem flickerSystem;
     BallLiftSystem ballSystem;
 
-    private final double DRIVE_POWER = 0.8;
-
     void initializeAllDevices()
     {
         this.driveSystem.init(this.hardwareMap);
@@ -151,6 +149,7 @@ public abstract class AutonomousOpMode extends LinearOpMode
         while (this.driveSystem.anyMotorsBusy())
         {
             telemetry.update();
+
             this.idle();
 
             this.driveSystem.adjustPower(ramp);
@@ -173,14 +172,6 @@ public abstract class AutonomousOpMode extends LinearOpMode
         flickerSystem.setLoadPosition();
     }
 
-    public void drive(double targetPosition) {
-        try {
-            driveWithEncoders(targetPosition, DRIVE_POWER);
-        } catch (Exception e) {
-            throw new NullPointerException(e.toString());
-        }
-    }
-
     public void load() {
         while (!flickerSystem.isBallLoaded()) {
             ballSystem.runLift(true);
@@ -188,5 +179,13 @@ public abstract class AutonomousOpMode extends LinearOpMode
         }
         ballSystem.stopBelt();
         ballSystem.stopLift();
+    }
+
+    public void park() {
+        try {
+            driveWithEncoders(0,0);
+        } catch (Exception e) {
+
+        }
     }
 }

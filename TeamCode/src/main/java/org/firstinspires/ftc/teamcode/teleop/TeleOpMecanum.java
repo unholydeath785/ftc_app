@@ -94,7 +94,7 @@ public class TeleOpMecanum extends OpMode {
                     @Override
                     public void invoke()
                     {
-                        if (!flicker.isBallLoaded()) {
+                        if (/*!flicker.isBallLoaded()*/true) {
                             ballLift.runLift(true);
                         }
                         ballLift.runBelt(true);

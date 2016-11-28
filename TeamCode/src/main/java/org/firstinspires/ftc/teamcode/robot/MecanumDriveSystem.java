@@ -14,7 +14,12 @@ public class MecanumDriveSystem
     public DcMotor  motorBackLeft   = null;
     public DcMotor  motorBackRight  = null;
 
-    public final int ticksPerRotation = 1120;
+    private static final double ticksPerRotation = 1120; // This is for the Andymark Neverest motor
+    private static final double motorGearSize = 32; //TODO: This is a placeholder, use actual value for this
+    private static final double wheelGearSize = 16; //TODO: This is a placeholder, use actual value for this
+    private static final double wheelDiameterInches   = 4.0 ; //TODO: This is a placeholder, use actual value for this
+    private static final double gearRatio = wheelGearSize / motorGearSize;
+    private static final double ticksPerInch = (ticksPerRotation * gearRatio)  / (wheelDiameterInches * Math.PI );
 
     HardwareMap hwMap           =  null;
 
@@ -40,19 +45,33 @@ public class MecanumDriveSystem
         this.motorBackRight.setDirection(DcMotor.Direction.FORWARD);
 
         // Set all drive motors to zero power
-        drive(0);
+        setPower(0);
 
-        runUsingEncoders();
+        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void runUsingEncoders()
+    public void setMode(DcMotor.RunMode runMode)
     {
-        motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorFrontLeft.setMode(runMode);
+        motorFrontRight.setMode(runMode);
+        motorBackLeft.setMode(runMode);
+        motorBackRight.setMode(runMode);
+    }
+    
+    public void setTargetPositionInches(double inches)
+    {
+        int ticks = this.inchesToTicks(inches);
+
+        setTargetPosition(ticks);
     }
 
+    public void setTargetPositionRevs(double revolutions)
+    {
+        int ticks = this.revolutionsToTicks(revolutions);
+
+        setTargetPosition(ticks);
+
+    }
     public void setTargetPosition(int position)
     {
         int frontLeftTarget = this.motorFrontLeft.getCurrentPosition() + position;
@@ -66,7 +85,7 @@ public class MecanumDriveSystem
         this.motorBackLeft.setTargetPosition(backLeftTarget);
         this.motorBackRight.setTargetPosition(backRightTarget);
 
-        runUsingEncoders();
+        setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public boolean anyMotorsBusy()
@@ -83,15 +102,33 @@ public class MecanumDriveSystem
     {
         return ((double) ticks / this.ticksPerRotation);
     }
+    
+    public int inchesToTicks(double inches)
+    {
+        return (int) Math.round(inches * this.ticksPerInch);
+    }
+
+    public double ticksToInches(int ticks)
+    {
+        return ((double) ticks / this.ticksPerInch);
+    }
 
     public int getMinimumDistanceFromTarget()
     {
         int d = this.motorFrontLeft.getTargetPosition() - this.motorFrontLeft.getCurrentPosition();
-        d = Math.min(d, this.motorFrontRight.getTargetPosition() - this.motorFrontRight.getCurrentPosition());
-        d = Math.min(d, this.motorBackLeft.getTargetPosition() - this.motorBackLeft.getCurrentPosition());
-        d = Math.min(d, this.motorBackRight.getTargetPosition() - this.motorBackRight.getCurrentPosition());
+        d = closestToZero(d, this.motorFrontRight.getTargetPosition() - this.motorFrontRight.getCurrentPosition());
+        d = closestToZero(d, this.motorBackLeft.getTargetPosition() - this.motorBackLeft.getCurrentPosition());
+        d = closestToZero(d, this.motorBackRight.getTargetPosition() - this.motorBackRight.getCurrentPosition());
 
         return d;
+    }
+
+    private int closestToZero(int v1, int v2)
+    {
+        if (Math.abs(v1) < Math.abs(v2))
+            return v1;
+
+        return v2;
     }
 
     // Tweeks the left and right motors by increment.
@@ -113,7 +150,7 @@ public class MecanumDriveSystem
         this.motorBackRight.setPower(rightPower);
     }
 
-    public void drive(double power)
+    public void setPower(double power)
     {
         this.motorFrontLeft.setPower(power);
         this.motorFrontRight.setPower(power);
@@ -125,11 +162,20 @@ public class MecanumDriveSystem
     {
         // Adjust the motor power as we get closer to the target
         int minDistance = this.getMinimumDistanceFromTarget();
-        double revolutionsAway = this.ticksToRevolutions(minDistance);
+
+        // ramp assumes the distance away from the target is positive,
+        // so we make it positive here and account for the direction when
+        // the motor power is set.
+        double direction = 1.0;
+        if (minDistance < 0)
+            {
+                minDistance = -minDistance;
+                direction = -1.0;
+            }
 
         double scaledPower = ramp.value(minDistance);
 
-        drive(scaledPower);
+        setPower(direction*scaledPower);
     }
 
     public void mecanumDrive(float rightX, float rightY, float leftX, float leftY)

@@ -46,7 +46,7 @@ public class FlickerSystem {
     public FlickerSystem(HardwareMap map) {
         this.flicker = map.dcMotor.get("flicker");
         this.loadWing = map.servo.get("flickerLoad");
-        this.colorSensor = map.colorSensor.get("flickerColorDetector");
+        //this.colorSensor = map.colorSensor.get("flickerColorDetector");
         this.position = ServoPositions.FLICKERLOAD;
         flicker.setDirection(DcMotor.Direction.REVERSE);
     }
@@ -85,7 +85,10 @@ public class FlickerSystem {
     }
 
     public boolean isBallLoaded() {
+        /*
         return colorSensor.red() == BASE_RED && colorSensor.green() == BASE_GREEN && colorSensor.blue() == BASE_BLUE || position == ServoPositions.FLICKERSHOOT;
+         */
+        return true;
     }
 
     private int revolutionsToTics(double revolutions) {

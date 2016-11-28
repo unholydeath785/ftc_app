@@ -1,18 +1,5 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.AnalogInput;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
-import org.firstinspires.ftc.robotcore.external.Func;
-import org.firstinspires.ftc.teamcode.robot.*;
-import org.firstinspires.ftc.teamcode.util.Handler;
-import org.firstinspires.ftc.teamcode.util.ramp.ExponentialRamp;
 
 /*
  * Created by EvanCoulson on 10/26/16.
@@ -34,11 +21,11 @@ public class BlueCenterPark extends AutonomousOpMode {
     @Override
     public void runOpMode() {
         initializeAllDevices();
-        driveWithEncoders(1.75, DRIVE_POWER);
+        driveToPositionRevs(1.75, DRIVE_POWER);
         shoot();
         load();
         shoot();
-        driveWithEncoders(4, DRIVE_POWER);
+        driveToPositionRevs(4, DRIVE_POWER);
         park();
     }
 }

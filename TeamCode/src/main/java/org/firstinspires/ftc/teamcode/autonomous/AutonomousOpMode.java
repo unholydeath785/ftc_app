@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.robot.*;
 import org.firstinspires.ftc.teamcode.util.ramp.*;
@@ -10,12 +11,19 @@ public abstract class AutonomousOpMode extends LinearOpMode
     MecanumDriveSystem driveSystem;
     LineFollowingSystem lineFollowingSystem;
     IMUSystem imuSystem;
+    FlickerSystem flickerSystem;
+    BallLiftSystem ballSystem;
 
     void initializeAllDevices()
     {
+        this.driveSystem = new MecanumDriveSystem();
+        this.imuSystem = new IMUSystem();
+        this.lineFollowingSystem = new LineFollowingSystem();
         this.driveSystem.init(this.hardwareMap);
-        this.imuSystem.init(this.hardwareMap);
-        this.lineFollowingSystem.init(this.hardwareMap);
+//        this.imuSystem.init(this.hardwareMap);
+//        this.lineFollowingSystem.init(this.hardwareMap);
+        this.flickerSystem = new FlickerSystem(this.hardwareMap);
+        this.ballSystem = new BallLiftSystem(this.hardwareMap);
     }
 
     //colorSide tells if the color of the line we are following is on the left or right of the sensor
@@ -69,7 +77,7 @@ public abstract class AutonomousOpMode extends LinearOpMode
             targetHeading += 360;
         }
 
-        this.driveSystem.runUsingEncoders();
+        this.driveSystem.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Between 130 and 2 degrees away from the target
         // we want to slow down from maxPower to 0.1
@@ -96,7 +104,7 @@ public abstract class AutonomousOpMode extends LinearOpMode
             heading = this.imuSystem.getHeading();
         }
 
-        this.driveSystem.drive(0);
+        this.driveSystem.setPower(0);
     }
 
     private double computeDegrees(double targetHeading, double heading)
@@ -124,13 +132,11 @@ public abstract class AutonomousOpMode extends LinearOpMode
         return sign*ramp.value(diff);
     }
 
-    void driveWithEncoders(double revolutions, double maxPower) throws InterruptedException
+    void driveToPositionRevs(double revolutions, double maxPower)
     {
-        // How far are we to move, in ticks instead of revolutions?
-        int ticks = this.driveSystem.revolutionsToTicks(revolutions);
         double minPower = 0.1;
 
-        this.driveSystem.setTargetPosition(ticks);
+        this.driveSystem.setTargetPositionRevs(revolutions);
 
         /*
             Create a Ramp that will map a distance in revolutions between 0.01 and 1.0
@@ -139,21 +145,49 @@ public abstract class AutonomousOpMode extends LinearOpMode
             will be set to maxPower, but when it gets within 1.0 revolutions, the power
             will be ramped down to minPower
         */
-        Ramp ramp = new ExponentialRamp(0.01, minPower, 1.0, maxPower);
+        Ramp ramp = new ExponentialRamp(driveSystem.revolutionsToTicks(0.01), minPower,
+                                        driveSystem.revolutionsToTicks(1.0), maxPower);
 
         // Wait until they are done
         while (this.driveSystem.anyMotorsBusy())
         {
             telemetry.update();
+
             this.idle();
 
             this.driveSystem.adjustPower(ramp);
         }
 
         // Now that we've arrived, kill the motors so they don't just sit there buzzing
-        driveSystem.drive(0);
+        driveSystem.setPower(0);
 
         // Always leave the screen looking pretty
         telemetry.update();
+    }
+
+    public void shoot() {
+        flickerSystem.setShootPosition();
+        flickerSystem.shoot();
+        while (flickerSystem.isBusy()) {
+            this.idle();
+        }
+        flickerSystem.setLoadPosition();
+    }
+
+    public void load() {
+        while (!flickerSystem.isBallLoaded()) {
+            ballSystem.runLift(true);
+            ballSystem.runBelt(true);
+        }
+        ballSystem.stopBelt();
+        ballSystem.stopLift();
+    }
+
+    public void park() {
+        try {
+            driveToPositionRevs(0,0);
+        } catch (Exception e) {
+
+        }
     }
 }

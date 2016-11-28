@@ -1,16 +1,5 @@
 package org.firstinspires.ftc.teamcode.autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.AnalogInput;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
-import org.firstinspires.ftc.robotcore.external.Func;
-import org.firstinspires.ftc.teamcode.robot.*;
-import org.firstinspires.ftc.teamcode.util.Handler;
-import org.firstinspires.ftc.teamcode.util.ramp.ExponentialRamp;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 /*
  * Created by EvanCoulson on 10/26/16.
@@ -24,72 +13,19 @@ import org.firstinspires.ftc.teamcode.util.ramp.ExponentialRamp;
      \_______\/ \_____\/ \_____\/ \_____\/     \_____\/ \_____\/ \__\/ \__\/   \__\/    \_____\/ \_\/ \_\/     \_\/     \__\/\__\/ \_\/ \_\/ \__\/\__\/
 
  */
+@Autonomous(name="AutonomousMode", group="Bot")
 public class BlueCenterPark extends AutonomousOpMode {
-    private HardwareMap hardwareMap;
-    private FlickerSystem flickerSystem;
-    private MecanumDriveSystem driveSystem;
-    private ExponentialRamp ramp;
 
-    public void initialzeAllDevices(HardwareMap map) {
-        this.hardwareMap = map;
-        this.flickerSystem = new FlickerSystem(map);
-        this.driveSystem = new MecanumDriveSystem();
-        this.driveSystem.init(map);
-    }
+    private final double DRIVE_POWER = 0.8;
 
     @Override
     public void runOpMode() {
-        initialzeAllDevices(hardwareMap);
-        drive(100);
+        initializeAllDevices();
+        driveToPositionRevs(1.75, DRIVE_POWER);
         shoot();
-        drive(2000);
+        load();
+        shoot();
+        driveToPositionRevs(4, DRIVE_POWER);
         park();
     }
-
-    public void drive(int targetPosition) {
-        this.driveSystem.runUsingEncoders();
-        try {
-            driveWithEncoders(targetPosition, 1.0);
-        } catch(Exception e) {
-        }
-    }
-
-    public void shoot() {
-        flickerSystem.shoot();
-    }
-
-    public void park() {
-
-        boolean park = this.driveSystem.anyMotorsBusy();
-        if(!park){
-            this.driveSystem.drive(0.0); //use drive or driveWithEncoder?
-        }
-
-    }
-   /*
-        drive:
-         get four motor wheels from hardwaremap drive to BELUGA
-         stop
-
-       shoot:
-        flicker motor hardwareMap get flicker
-        do 2x
-            spin motor with encoders
-            turn with encoders 1 cycle
-
-       drive:
-        get four wheels from hwmap
-        while (not at x)
-           drive foward ramp up to 100%
-           if (approaching x)
-               ramp down exponential
-
-       park:
-        Pointy stick hit
-        keep going
-        stahp
-    */
-
-
-
 }

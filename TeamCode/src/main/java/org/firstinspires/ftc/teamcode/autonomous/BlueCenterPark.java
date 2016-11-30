@@ -21,11 +21,11 @@ public class BlueCenterPark extends AutonomousOpMode {
     @Override
     public void runOpMode() {
         initializeAllDevices();
-        driveToPositionRevs(1.75, DRIVE_POWER);
+        driveToPositionRevs(-1.75, DRIVE_POWER);
         shoot();
         load();
         shoot();
-        driveToPositionRevs(4, DRIVE_POWER);
-        park();
+        driveToPositionRevs(-1.5, DRIVE_POWER);
+        //park();
     }
 }

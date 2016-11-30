@@ -16,6 +16,8 @@ public class BallLiftSystem {
     private final double LIFT_POWER = 0.42;
     private final double BELT_POWER = 0.6;
     private final int ticksPerRotation = 1120;
+    private static final int motorGearSize = 1;
+    private static final int lifterGearSize = 5;
 
     private HardwareMap map;
     private DcMotor lifter;
@@ -41,11 +43,8 @@ public class BallLiftSystem {
 
     public void runLift(double revolutions) {
         lifter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        lifter.setTargetPosition(lifter.getCurrentPosition() + revolutionsToTics(revolutions));
+        lifter.setTargetPosition(lifter.getCurrentPosition() + revolutionsToTics(revolutions)*(lifterGearSize/motorGearSize));
         lifter.setPower(LIFT_POWER);
-        while (lifter.isBusy()) {
-
-        }
     }
 
     public void stopLift() {
@@ -65,9 +64,6 @@ public class BallLiftSystem {
         belt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         belt.setTargetPosition(belt.getCurrentPosition() + revolutionsToTics(revolutions));
         belt.setPower(BELT_POWER);
-        while (belt.isBusy()) {
-
-        }
     }
 
     public void stopBelt() {
@@ -76,5 +72,11 @@ public class BallLiftSystem {
 
     private int revolutionsToTics(double revolutions) {
         return (int) Math.round(revolutions * this.ticksPerRotation);
+    }
+
+    public void waitBeltandLiftBusy () {
+        while (lifter.isBusy() || belt.isBusy()) {
+
+        }
     }
 }

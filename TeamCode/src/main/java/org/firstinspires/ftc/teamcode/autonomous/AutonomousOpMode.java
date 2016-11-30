@@ -17,10 +17,10 @@ public abstract class AutonomousOpMode extends LinearOpMode
     void initializeAllDevices()
     {
         this.driveSystem = new MecanumDriveSystem();
-        this.imuSystem = new IMUSystem();
-        this.lineFollowingSystem = new LineFollowingSystem();
         this.driveSystem.init(this.hardwareMap);
-//        this.imuSystem.init(this.hardwareMap);
+        this.imuSystem = new IMUSystem();
+        this.imuSystem.init(this.hardwareMap);
+        this.lineFollowingSystem = new LineFollowingSystem();
 //        this.lineFollowingSystem.init(this.hardwareMap);
         this.flickerSystem = new FlickerSystem(this.hardwareMap);
         this.ballSystem = new BallLiftSystem(this.hardwareMap);
@@ -149,6 +149,7 @@ public abstract class AutonomousOpMode extends LinearOpMode
                                         driveSystem.revolutionsToTicks(1.0), maxPower);
 
         // Wait until they are done
+        driveSystem.setPower(maxPower);
         while (this.driveSystem.anyMotorsBusy())
         {
             telemetry.update();
@@ -175,12 +176,9 @@ public abstract class AutonomousOpMode extends LinearOpMode
     }
 
     public void load() {
-        while (!flickerSystem.isBallLoaded()) {
-            ballSystem.runLift(true);
-            ballSystem.runBelt(true);
-        }
-        ballSystem.stopBelt();
-        ballSystem.stopLift();
+        ballSystem.runLift(2);
+        ballSystem.runBelt(2);
+        ballSystem.waitBeltandLiftBusy();
     }
 
     public void park() {

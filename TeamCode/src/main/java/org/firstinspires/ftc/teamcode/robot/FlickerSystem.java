@@ -28,8 +28,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 //         \__\/       \__\/       \__\/        \__\/         \__\/         \__\/         \__\/                  \__\/                     \__\/                     \__\/         \__\/
 
 public class FlickerSystem {
-
-    private final int ticksPerRotation = 1120;
+    //ticks per rotation for a 60 to 1 motor
+    private final int ticksPerRotation = 1120 * 3 / 2;
     private final double FLICKER_POWER = 0.8;
     private final double SHOOT_POSITION = 0.5;
     private final double LOAD_POSITION = 0.46;

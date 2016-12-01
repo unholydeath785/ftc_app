@@ -69,7 +69,7 @@ public class ColorCalibration extends LinearOpMode
 
         for(int i = 0; i < 10; i++) {
             hue.addSample(hueFromRGB(sensorRGB.red(), sensorRGB.green(), sensorRGB.blue()));
-            tryWait(200);
+            sleep(200);
         }
 
         hue.red = sensorRGB.red();
@@ -87,16 +87,7 @@ public class ColorCalibration extends LinearOpMode
         return Math.atan2(y, x) * (360.0 / (2 * Math.PI));
     }
 
-    public void tryWait(int ms)
-    {
-        try
-        {
-            wait(ms);
-        }
-        catch (InterruptedException e)
-        {
-        }
-    }
+
 
     void composeDashboard()
     {

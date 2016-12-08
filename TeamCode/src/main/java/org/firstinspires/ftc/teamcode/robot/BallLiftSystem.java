@@ -15,6 +15,7 @@ public class BallLiftSystem {
 
     private final double LIFT_POWER = 0.42;
     private final double BELT_POWER = 0.6;
+    private final double INTAKE_POWER = 0.8;
     private final int ticksPerRotation = 1120;
     private static final int motorGearSize = 1;
     private static final int lifterGearSize = 5;
@@ -22,6 +23,7 @@ public class BallLiftSystem {
     private HardwareMap map;
     private DcMotor lifter;
     private DcMotor belt;
+    private DcMotor intake;
     public boolean autonomous;
 
     private boolean debug;
@@ -30,8 +32,25 @@ public class BallLiftSystem {
         this.map = map;
         this.lifter = map.dcMotor.get("ballLiftMotor");
         this.belt = map.dcMotor.get("ballBeltMotor");
-    }
+        this.intake = map.dcMotor.get("ballIntakeMotor");
 
+    }
+    public void runIntake(boolean isFoward){
+        if(isFoward){
+            intake.setDirection(DcMotorSimple.Direction.FORWARD);
+        }
+        else{
+            intake.setDirection(DcMotorSimple.Direction.REVERSE);
+        }
+        intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        intake.setPower(INTAKE_POWER);
+    }
+    public void runIntake(double revolutions){
+        intake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        intake.setTargetPosition(intake.getCurrentPosition()+revolutionsToTics(revolutions));
+        intake.setPower(INTAKE_POWER);
+        
+    }
     public void runLift(boolean isFoward) {
         if (isFoward)
             lifter.setDirection(DcMotorSimple.Direction.FORWARD);

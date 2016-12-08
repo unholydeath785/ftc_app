@@ -43,11 +43,13 @@ public class BallLiftSystem {
         intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intake.setPower(INTAKE_POWER);
     }
+    public void stopIntake(){
+        intake.setPower(0);
+    }
     public void runIntake(double revolutions){
         intake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         intake.setTargetPosition(intake.getCurrentPosition()+revolutionsToTics(revolutions));
         intake.setPower(INTAKE_POWER);
-        
     }
     public void runLift(boolean isFoward) {
         if (isFoward)

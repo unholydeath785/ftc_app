@@ -98,6 +98,7 @@ public class TeleOpMecanum extends OpMode {
                             ballLift.runLift(true);
                         }
                         ballLift.runBelt(true);
+                        ballLift.runIntake(true);
                     }
                 };
         this.ballLiftFowardButton.releasedHandler =
@@ -108,6 +109,7 @@ public class TeleOpMecanum extends OpMode {
                     {
                         ballLift.stopBelt();
                         ballLift.stopLift();
+                        ballLift.stopIntake();
                     }
                 };
 
@@ -130,6 +132,7 @@ public class TeleOpMecanum extends OpMode {
                     {
                         ballLift.runLift(false);
                         ballLift.runBelt(false);
+                        ballLift.runIntake(false);
                     }
                 };
         this.ballLiftReverseButton.releasedHandler =
@@ -140,6 +143,7 @@ public class TeleOpMecanum extends OpMode {
                     {
                         ballLift.stopBelt();
                         ballLift.stopLift();
+                        ballLift.stopIntake();
                     }
                 };
 
